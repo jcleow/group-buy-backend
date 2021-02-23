@@ -129,6 +129,9 @@ module.exports = {
       purchase_status: {
         type: Sequelize.ENUM('committed', 'activated', 'pending fulfillment', 'fulfilled', 'cancelled'),
       },
+      payment_receipt: {
+        type: Sequelize.STRING,
+      },
       payment_status: {
         type: Sequelize.ENUM('processing', 'paid', 'refunded'),
       },

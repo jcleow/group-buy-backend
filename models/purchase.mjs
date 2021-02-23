@@ -24,6 +24,9 @@ export default function initPurchaseModel(sequelize, DataTypes) {
     purchaseStatus: {
       type: DataTypes.ENUM('committed', 'activated', 'pending fulfillment', 'fulfilled', 'cancelled'),
     },
+    paymentReceipt: {
+      type: DataTypes.STRING,
+    },
     paymentStatus: {
       type: DataTypes.ENUM('processing', 'paid', 'refunded'),
     },
