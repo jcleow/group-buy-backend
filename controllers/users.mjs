@@ -45,7 +45,9 @@ export default function initUsersController(db) {
   };
 
   const register = async (req, res) => {
-    const { username, password } = req.body;
+    const {
+      username, password, email, handphoneNum,
+    } = req.body;
 
     // First hash the password
     const shaObj = new jsSHA('SHA-512', 'TEXT', { encoding: 'UTF8' });
@@ -56,6 +58,8 @@ export default function initUsersController(db) {
     const newUser = await db.User.create({
       username,
       password: hashedPassword,
+      email,
+      handphoneNum,
     });
 
     // Send cookies
