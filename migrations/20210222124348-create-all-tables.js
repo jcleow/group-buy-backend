@@ -88,6 +88,11 @@ module.exports = {
       },
       listing_status: {
         type: Sequelize.ENUM('below-moq', 'above-moq', 'cancelled', 'completed'),
+        defaultValue: 'below-moq',
+      },
+      is_deleted: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
       created_at: {
         allowNull: false,
@@ -125,7 +130,7 @@ module.exports = {
         type: Sequelize.ENUM('committed', 'activated', 'pending fulfillment', 'fulfilled', 'cancelled'),
       },
       payment_status: {
-        type: Sequelize.ENUM('paid', 'refunded'),
+        type: Sequelize.ENUM('processing', 'paid', 'refunded'),
       },
       amt_refunded: {
         type: Sequelize.DECIMAL,

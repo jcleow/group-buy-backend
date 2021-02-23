@@ -28,7 +28,7 @@ module.exports = {
     const arrOfDiscounts = [0.2, 0.3, 0.4];
     const arrOfListingStatuses = ['below-moq', 'above-moq', 'cancelled', 'completed'];
     const arrOfPurchaseStatuses = ['committed', 'activated', 'pending fulfillment', 'fulfilled', 'cancelled'];
-    const arrOfPaymentStatuses = ['paid', 'refunded'];
+    const arrOfPaymentStatuses = ['processing', 'paid', 'refunded'];
 
     for (let i = 0; i < 6; i += 1) {
       // $1 to $5
