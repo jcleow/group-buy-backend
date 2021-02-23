@@ -24,7 +24,7 @@ export default function bindRoutes(app) {
         },
       });
       if (!chosenUser) {
-        res.status(503).send('sorry an error has occurred');
+        res.status(503).send('Sorry an error has occurred');
       }
       req.middlewareLoggedIn = true;
       req.loggedInUserId = Number(req.cookies.loggedInUserId);
@@ -45,4 +45,5 @@ export default function bindRoutes(app) {
   const PurchasesController = initPurchasesController(db);
 
   const ListingsController = initListingsController(db);
+  app.get('/listings', ListingsController.index);
 }
