@@ -55,6 +55,9 @@ module.exports = {
       moq: {
         type: Sequelize.INTEGER,
       },
+      allow_oversubscription: {
+        type: Sequelize.BOOLEAN,
+      },
       usual_price: {
         type: Sequelize.DECIMAL,
       },

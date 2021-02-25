@@ -44,8 +44,6 @@ module.exports = {
       const randDiscountPrice = Number((arrOfDiscounts[Math.floor(Math.random() * arrOfDiscounts.length)]
          * usualPriceAmt).toFixed(2));
 
-      console.log(randDiscountPrice, 'randDiscountPx');
-
       const listing = {
         // title
         title: faker.hacker.noun(),
@@ -65,6 +63,9 @@ module.exports = {
 
         // moq (random num) // 1 to 5
         moq: Math.floor(Math.random() * 5) + 1,
+
+        // Whether a lister's listing can go beyond its goal set
+        allow_oversubscription: false,
 
         // usual_price (rand num)
         usual_price: usualPriceAmt,
