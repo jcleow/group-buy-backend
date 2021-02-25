@@ -68,7 +68,9 @@ export default function bindRoutes(app) {
 
   const PurchasesController = initPurchasesController(db);
   app.post('/addReceipt', multerUpload.single('receiptImg'), PurchasesController.addReceipt);
+  app.get('/purchases/count/:listingId', PurchasesController.countPurchasesPerListing);
 
   const ListingsController = initListingsController(db);
   app.get('/listings', ListingsController.index);
+  app.post('/createListing', ListingsController.create);
 }

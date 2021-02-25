@@ -15,7 +15,25 @@ export default function initListingsController(db) {
       .catch((error) => console.log(error));
   };
 
+  const create = async (req, res) => {
+    const { updatedFormStore } = req.body;
+
+    // Remove $ sign from usualPrice and discountedPrice
+    const updatedFields = {
+      ...updatedFormStore,
+      usualPrice: updatedFormStore.usualPrice?.replace(/[$,]/g, ''),
+      discountedPrice: updatedFormStore.discountedPrice?.replace(/[$,]/g, ''),
+    };
+
+    // Create a new listing
+    const newListing = await db.Listing.create(
+      updatedFields,
+    );
+    res.send({ message: 'success', newListing });
+  };
+
   return {
     index,
+    create,
   };
 }
