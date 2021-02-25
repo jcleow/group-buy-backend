@@ -25,6 +25,8 @@ const storage = multer.diskStorage({
 // // maps each field name to an array of the associated file information objects.
 const multerUpload = multer({ storage });
 
+// other resources on multerupload
+// comprehensive video: https://www.youtube.com/watch?v=KoWTJ5XiYm4&ab_channel=webnaturesolutions
 // --------------------------------------------------
 
 export default function bindRoutes(app) {
