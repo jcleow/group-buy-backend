@@ -43,6 +43,7 @@ export default function bindRoutes(app) {
   app.post('/register', UsersController.register);
 
   const PurchasesController = initPurchasesController(db);
+  app.get('/purchases/count/:listingId', PurchasesController.countPurchasesPerListing);
 
   const ListingsController = initListingsController(db);
   app.get('/listings', ListingsController.index);
