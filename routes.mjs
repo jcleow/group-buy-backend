@@ -47,4 +47,5 @@ export default function bindRoutes(app) {
 
   const ListingsController = initListingsController(db);
   app.get('/listings', ListingsController.index);
+  app.post('/createListing', ListingsController.create);
 }

@@ -22,6 +22,9 @@ export default function initListingModel(sequelize, DataTypes) {
     moq: {
       type: DataTypes.INTEGER,
     },
+    allowOversubscription: {
+      type: DataTypes.BOOLEAN,
+    },
     usualPrice: {
       type: DataTypes.DECIMAL,
     },
