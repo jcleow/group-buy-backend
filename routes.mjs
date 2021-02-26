@@ -1,31 +1,36 @@
 import multer from 'multer';
+import aws from 'aws-sdk';
+import multerS3 from 'multer-s3';
 import db from './models/index.mjs';
 import convertUserIdToHash from './helper.mjs';
 import initUsersController from './controllers/users.mjs';
 import initPurchasesController from './controllers/purchases.mjs';
 import initListingsController from './controllers/listings.mjs';
-// import your controllers here
+import 'dotenv/config.js';
 
-// multer settings for local deployment (From Alvin) ------------------------
-// set the name of the upload directory and filename of uploaded photos here for multer
-// more info on whys of using multer.diskStorage (see steps 5-6): https://medium.com/@svibhuti22/file-upload-with-multer-in-node-js-and-express-5bc76073419f
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, 'public/images/');
-  },
-  filename(req, file, cb) {
-    cb(null, `${Date.now()}-${file.fieldname}-${file.originalname}`);
-  },
+// Set up a new S3 instance
+const s3 = new aws.S3({
+  accessKeyId: process.env.ACCESSKEYID,
+  secretAccessKey: process.env.SECRETACCESSKEY,
 });
 
-// // using the configuration in the storage varible, generate a middleware to process
-// // multiple files for the field names 'payment' and 'product photos'
-// // to upload images of a request's payment details and product photos respectively
-// // the `Request` object will be populated with a `files` object which
-// // maps each field name to an array of the associated file information objects.
-const multerUpload = multer({ storage });
+// Set up multer upload
+const multerUpload = multer({
+  storage: multerS3({
+    s3,
+    bucket: 'swe1-group-buy',
+    acl: 'public-read',
+    metadata: (request, file, callback) => {
+      callback(null, { fieldName: file.fieldname });
+    },
+    key: (request, file, callback) => {
+      callback(null, Date.now().toString());
+    },
+  }),
+});
 
-// const uploadCampaignPics = multer({ dest: 'public/campaignImages/' });
+console.log(process.env.ACCESSKEYID, 'access');
+console.log(process.env.SECRETACCESSKEY, 'secret');
 
 // other resources on multerupload
 // comprehensive video: https://www.youtube.com/watch?v=KoWTJ5XiYm4&ab_channel=webnaturesolutions
@@ -41,21 +46,21 @@ export default function bindRoutes(app) {
 
       if (req.cookies.loggedInHash === hash) {
         req.middlewareLoggedIn = true;
-      }
 
-      const { loggedInUserId } = req.cookies;
-      // Find this user in the database
-      const chosenUser = await db.User.findOne({
-        where: {
-          id: loggedInUserId,
-        },
-      });
-      if (!chosenUser) {
-        res.status(503).send('Sorry an error has occurred');
+        const { loggedInUserId } = req.cookies;
+        // Double check by finding this user in the database
+        const chosenUser = await db.User.findByPk(loggedInUserId);
+        if (!chosenUser) {
+          res.status(503).send('Sorry an error has occurred');
+        }
+        req.loggedInUserId = Number(req.cookies.loggedInUserId);
+        req.loggedInUsername = chosenUser.username;
+        // If hash is not valid, delete all cookies
+      } else {
+        res.clearCookie('loggedInHash');
+        res.clearCookie('loggedInUserId');
+        res.clearCookie('loggedInUsername');
       }
-      req.middlewareLoggedIn = true;
-      req.loggedInUserId = Number(req.cookies.loggedInUserId);
-      req.loggedInUsername = chosenUser.username;
       next();
       return;
     }
