@@ -25,11 +25,14 @@ const storage = multer.diskStorage({
 // // maps each field name to an array of the associated file information objects.
 const multerUpload = multer({ storage });
 
+// const uploadCampaignPics = multer({ dest: 'public/campaignImages/' });
+
 // other resources on multerupload
 // comprehensive video: https://www.youtube.com/watch?v=KoWTJ5XiYm4&ab_channel=webnaturesolutions
 // --------------------------------------------------
 
 export default function bindRoutes(app) {
+  // Middleware that checks if a user is authenticated
   app.use(async (req, res, next) => {
     req.middlewareLoggedIn = false;
 
@@ -73,4 +76,8 @@ export default function bindRoutes(app) {
   const ListingsController = initListingsController(db);
   app.get('/listings', ListingsController.index);
   app.post('/createListing', ListingsController.create);
+  // Used multerUpload.array and req files was empty hence use .any() instead.
+  // https://stackoverflow.com/questions/46987140/express-multer-upload-doesnt-work
+  // Accepts all files that comes over the wire. An array of files will be stored in req.files.
+  app.post('/uploadCampaignPictures', multerUpload.any('campaignImages'), ListingsController.uploadCampaignPictures);
 }

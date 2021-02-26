@@ -1,3 +1,5 @@
+import multer from 'multer';
+
 export default function initListingsController(db) {
   /**
    * Function to return all the listings present in database
@@ -32,8 +34,15 @@ export default function initListingsController(db) {
     res.send({ message: 'success', newListing });
   };
 
+  const uploadCampaignPictures = (req, res) => {
+    console.log(req, 'req');
+    console.log(req.files, 'req.files');
+    res.send({ message: 'upload complete' });
+  };
+
   return {
     index,
     create,
+    uploadCampaignPictures,
   };
 }
