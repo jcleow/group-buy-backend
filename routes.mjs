@@ -29,9 +29,6 @@ const multerUpload = multer({
   }),
 });
 
-console.log(process.env.ACCESSKEYID, 'access');
-console.log(process.env.SECRETACCESSKEY, 'secret');
-
 // other resources on multerupload
 // comprehensive video: https://www.youtube.com/watch?v=KoWTJ5XiYm4&ab_channel=webnaturesolutions
 // --------------------------------------------------
