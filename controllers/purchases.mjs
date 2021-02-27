@@ -1,3 +1,5 @@
+import { CLIEngine } from 'eslint';
+
 export default function initPurchasesController(db) {
   const index = async (req, res) => {
     res.send();
@@ -30,7 +32,32 @@ export default function initPurchasesController(db) {
       .catch((error) => console.log(error));
   };
 
+  const allPurchases = async (req, res) => {
+    const userId = req.loggedInUserId;
+
+    // use userId to query purchases table for all the purchases associated w/ the user
+    const purchasesAssociatedWithUser = await db.Purchase.findAll({
+      where: {
+        purchaser_id: userId,
+      },
+      include: [{ model: db.Listing }],
+    });
+    console.log('purchasesAssociatedWithUser');
+    console.log(purchasesAssociatedWithUser);
+    // console.log('purchasesAssociatedWithUser.listing');
+    // console.log(purchasesAssociatedWithUser.listing);
+    res.send(purchasesAssociatedWithUser);
+
+    // docs for mixins: https://sequelize.org/master/manual/assocs.html#one-to-many-relationships
+    // for the mixin below, instead of get Purchases, use getPurchaser, which is the alias.
+    // also, even tho getPurchaser is singular, it returns all purchases associated w/ e instance
+    // const allPurchasesAssociatedWithUserId = (await userIdInstance.getPurchaser());
+    // console.log('allPurchasesAssociatedWithUserId is:');
+    // console.log(allPurchasesAssociatedWithUserId);
+    // console.log(allPurchasesAssociatedWithUserId.length);
+  };
+
   return {
-    index, countPurchasesPerListing, addReceipt,
+    index, countPurchasesPerListing, addReceipt, allPurchases,
   };
 }
