@@ -82,5 +82,5 @@ export default function bindRoutes(app) {
   // Used multerUpload.array and req files was empty hence use .any() instead.
   // https://stackoverflow.com/questions/46987140/express-multer-upload-doesnt-work
   // Accepts all files that comes over the wire. An array of files will be stored in req.files.
-  app.post('/uploadCampaignPictures', multerUpload.any('campaignImages'), ListingsController.uploadCampaignPictures);
+  app.post('/listings/:listingId/uploadCampaignPictures', multerUpload.any('campaignImages'), ListingsController.uploadCampaignPictures);
 }

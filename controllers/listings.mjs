@@ -31,12 +31,27 @@ export default function initListingsController(db) {
     const newListing = await db.Listing.create(
       updatedFields,
     );
-    res.send({ message: 'success', newListing });
+    res.send({ newListing });
   };
 
-  const uploadCampaignPictures = (req, res) => {
-    console.log(req, 'req');
+  const uploadCampaignPictures = async (req, res) => {
     console.log(req.files, 'req.files');
+
+    // Create a hashmap of all the image urls
+    const imageUrls = {};
+    req.files.forEach((file, idx) => {
+      imageUrls[`img${idx + 1}`] = file.location;
+    });
+
+    console.log(imageUrls, 'imageUrls');
+
+    const { listingId } = req.params;
+    const newListing = await db.Listing.findByPk(Number(listingId));
+
+    newListing.images = imageUrls;
+
+    await newListing.save();
+
     res.send({ message: 'upload complete' });
   };
 
