@@ -1,12 +1,24 @@
-import { CLIEngine } from 'eslint';
-
 export default function initPurchasesController(db) {
   const index = async (req, res) => {
     res.send();
   };
   const addReceipt = async (req, res) => {
+    console.log('req.body is:');
+    console.log(req.body);
     console.log('req.file is:');
     console.log(req.file);
+    // const { id } = req.body.selectedListingData;
+    // get the instance of the listing to update the photo addres
+    // const purchaseInstance = await db.Purchase.findByPk(id);
+    // console.log('purchaseInstance is');
+    // const imgUrl = req.file.location;
+    // console.log(purchaseInstance);
+    // purchaseInstance.paymentReceipt = imgUrl;
+    // purchaseInstance.paymentStatus = 'processing';
+    // purchaseInstance.purchaseStatus = 'committed';
+    // await purchaseInstance.save();
+    res.send();
+
     // get the user's id
     // get the item's listing id
     // create new db entry based on the following
@@ -18,6 +30,27 @@ export default function initPurchasesController(db) {
     // paymentStatus: 'paid',
     // });
   };
+
+  // const uploadCampaignPictures = async (req, res) => {
+  //   console.log(req.files, 'req.files');
+
+  //   // Create a hashmap of all the image urls
+  //   const imageUrls = {};
+  //   req.files.forEach((file, idx) => {
+  //     imageUrls[`img${idx + 1}`] = file.location;
+  //   });
+
+  //   console.log(imageUrls, 'imageUrls');
+
+  //   const { listingId } = req.params;
+  //   const newListing = await db.Listing.findByPk(Number(listingId));
+
+  //   newListing.images = imageUrls;
+
+  //   await newListing.save();
+
+  //   res.send({ message: 'upload complete' });
+  // };
 
   /**
    * Function to handle the request to count the number of purchases for a listing
