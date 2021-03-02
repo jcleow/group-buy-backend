@@ -119,7 +119,7 @@ module.exports = {
         purchaser_id: Math.floor(Math.random() * 2) + 1,
         purchase_status: arrOfPurchaseStatuses[Math.floor(Math.random() * arrOfPurchaseStatuses.length)],
         payment_receipt: 'https://www.citibank.com.sg/gcb/otherservices/images/paynow/step-4.jpg',
-        receiptUploadDate: randomDate(new Date(2020, 0, 1), new Date()),
+        receipt_upload_date: randomDate(new Date(2020, 0, 1), new Date()),
         payment_status: arrOfPaymentStatuses[Math.floor(Math.random() * arrOfPaymentStatuses.length)],
         // dummy values
         amt_refunded: 0,

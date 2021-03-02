@@ -62,12 +62,13 @@ export default function initPurchasesController(db) {
   const recordPurchase = async (req, res) => {
     const { listingPK } = req.params;
     const { qtyOrdered } = req.params;
+    const userId = req.loggedInUserId;
 
     // create a new entry in db.Purchase
     const newPurchaseInstance = await db.Purchase.create({
       listingId: listingPK,
       qty: qtyOrdered,
-      purchaserId: req.userId,
+      purchaserId: userId,
       purchaseStatus: 'committed',
       paymentReceipt: req.file.location,
       receiptUploadDate: new Date(),
@@ -77,7 +78,7 @@ export default function initPurchasesController(db) {
     });
 
     // update item's stock/ qtyRemaining in the listings table
-    const relatedListing = newPurchaseInstance.getListing();
+    const relatedListing = await newPurchaseInstance.getListing();
     // check if the mixin works:
     console.log('relatedListing is');
     console.log(relatedListing);
