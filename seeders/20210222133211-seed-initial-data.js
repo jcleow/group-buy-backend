@@ -105,7 +105,9 @@ module.exports = {
 
     const arrOfPurchases = [];
 
-    for (let i = 0; i < 3; i += 1) {
+    for (let i = 0; i < 10; i += 1) {
+      const singleDate = new Date();
+      singleDate.setDate(singleDate.getDate() - i);
       const purchase = {
         listing_id: Math.floor(Math.random() * 6) + 1,
         purchaser_id: Math.floor(Math.random() * 2) + 1,
@@ -114,9 +116,9 @@ module.exports = {
         // dummy values
         amt_refunded: 0,
         refund_tier: '2',
-        date_delivered: new Date(),
-        created_at: new Date(),
-        updated_at: new Date(),
+        date_delivered: singleDate,
+        created_at: singleDate,
+        updated_at: singleDate,
       };
       for (let j = 0; j < 5; j += 1) {
         arrOfPurchases.push(purchase);
