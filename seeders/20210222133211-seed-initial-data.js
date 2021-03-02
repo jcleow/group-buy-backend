@@ -118,7 +118,9 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       };
-      arrOfPurchases.push(purchase);
+      for (let j = 0; j < 5; j += 1) {
+        arrOfPurchases.push(purchase);
+      }
     }
 
     await queryInterface.bulkInsert('users', usersList);

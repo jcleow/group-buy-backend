@@ -60,10 +60,8 @@ export default function initListingsController(db) {
       },
       include: 'purchaser',
     });
-    console.log(allPurchases, 'allPurchases');
     // Mutate allPurchases to only display the relevant fields on client's campaignProgress for a single listing
     allPurchases.forEach((purchase) => {
-      console.log(purchase, 'purchase');
       // Purchase Data Field (not incl username & reputation) constitutes 1 row in campaignProgress table
       const purchaseData = {
         paymentStatus: true,
@@ -81,7 +79,7 @@ export default function initListingsController(db) {
       purchaseData.username = purchase.purchaser.username;
       purchaseData.reputation = purchase.purchaser.reputation;
     });
-
+    console.log(allPurchases);
     res.send({ allPurchases });
   };
 
