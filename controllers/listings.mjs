@@ -55,14 +55,14 @@ export default function initListingsController(db) {
   const getAllPurchases = async (req, res) => {
     const { listingId } = req.params;
     console.log(listingId, 'listingId');
-    const allPurchases = await db.Purchase.findAll({
+    const allDetailedPurchasesInfo = await db.Purchase.findAll({
       where: {
         listingId,
       },
       include: 'purchaser',
     });
     // Mutate allPurchases to only display the relevant fields on client's campaignProgress for a single listing
-    allPurchases.forEach((purchase) => {
+    const allFilteredPurchaseData = allDetailedPurchasesInfo.map((purchase) => {
       // Purchase Data Field (not incl username & reputation) constitutes 1 row in campaignProgress table
       const purchaseData = {
         paymentStatus: true,
@@ -79,9 +79,10 @@ export default function initListingsController(db) {
       // manually include purchaser's name and reputation as they are nested
       purchaseData.username = purchase.purchaser.username;
       purchaseData.reputation = purchase.purchaser.reputation;
+      return purchaseData;
     });
-    console.log(allPurchases);
-    res.send({ allPurchases });
+    console.log(allFilteredPurchaseData, 'allFilteredPurchaseData');
+    res.send({ allFilteredPurchaseData });
   };
 
   return {
