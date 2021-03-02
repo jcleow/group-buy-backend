@@ -21,6 +21,9 @@ export default function initUserModel(sequelize, DataTypes) {
     handphoneNum: {
       type: DataTypes.STRING,
     },
+    reputation: {
+      type: DataTypes.INTEGER,
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE,

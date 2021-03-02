@@ -22,6 +22,9 @@ module.exports = {
       handphone_num: {
         type: Sequelize.STRING,
       },
+      reputation: {
+        type: Sequelize.INTEGER,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -144,6 +147,10 @@ module.exports = {
       refund_tier: {
         type: Sequelize.ENUM('1', '2'),
       },
+      date_delivered: {
+        type: Sequelize.DATE(),
+      },
+      // Add a quantity purchased field to purchases
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,

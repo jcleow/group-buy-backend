@@ -35,15 +35,11 @@ export default function initListingsController(db) {
   };
 
   const uploadCampaignPictures = async (req, res) => {
-    console.log(req.files, 'req.files');
-
     // Create a hashmap of all the image urls
     const imageUrls = {};
     req.files.forEach((file, idx) => {
       imageUrls[`img${idx + 1}`] = file.location;
     });
-
-    console.log(imageUrls, 'imageUrls');
 
     const { listingId } = req.params;
     const newListing = await db.Listing.findByPk(Number(listingId));
@@ -55,9 +51,46 @@ export default function initListingsController(db) {
     res.send({ message: 'upload complete' });
   };
 
+  const getAllPurchases = async (req, res) => {
+    const { listingId } = req.params;
+    console.log(listingId, 'listingId');
+    const allPurchases = await db.Purchase.findAll({
+      where: {
+        listingId,
+      },
+      include: 'purchaser',
+    });
+    console.log(allPurchases, 'allPurchases');
+    // Wrangle the relevant fields to send to client
+
+    allPurchases.forEach((purchase) => {
+      console.log(purchase, 'purchase');
+      const purchaseData = {
+        username: true,
+        paymentStatus: true,
+        quantity: true,
+        createdAt: true,
+        // To calculate from DB?
+        reputation: true,
+        // To add into DB
+        dateDelivered: true,
+      };
+      const relevantPurchaseKeys = Object.keys(purchase.dataValues).filter((key) => purchaseData[key]).forEach((key) => {
+        purchaseData[key] = purchase[key];
+      });
+
+      // manually include purchaser's name
+      purchaseData.username = purchase.username;
+      console.log(purchaseData, 'purchaseData');
+    });
+
+    res.send({ allPurchases });
+  };
+
   return {
     index,
     create,
     uploadCampaignPictures,
+    getAllPurchases,
   };
 }
