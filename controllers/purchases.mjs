@@ -2,34 +2,6 @@ export default function initPurchasesController(db) {
   const index = async (req, res) => {
     res.send();
   };
-  const addReceipt = async (req, res) => {
-    console.log('req.body is:');
-    console.log(req.body);
-    console.log('req.file is:');
-    console.log(req.file);
-    // const { id } = req.body.selectedListingData;
-    // get the instance of the listing to update the photo addres
-    // const purchaseInstance = await db.Purchase.findByPk(id);
-    // console.log('purchaseInstance is');
-    // const imgUrl = req.file.location;
-    // console.log(purchaseInstance);
-    // purchaseInstance.paymentReceipt = imgUrl;
-    // purchaseInstance.paymentStatus = 'processing';
-    // purchaseInstance.purchaseStatus = 'committed';
-    // await purchaseInstance.save();
-    res.send();
-
-    // get the user's id
-    // get the item's listing id
-    // create new db entry based on the following
-    // db.Purchase.create({
-    //   listId: '',
-    //   purchaserId: '',
-    //   purchase_status: 'committed',
-    // paymentReceipt:req.file,
-    // paymentStatus: 'paid',
-    // });
-  };
 
   // const uploadCampaignPictures = async (req, res) => {
   //   console.log(req.files, 'req.files');
@@ -75,10 +47,7 @@ export default function initPurchasesController(db) {
       },
       include: [{ model: db.Listing }],
     });
-    console.log('purchasesAssociatedWithUser');
     console.log(purchasesAssociatedWithUser);
-    // console.log('purchasesAssociatedWithUser.listing');
-    // console.log(purchasesAssociatedWithUser.listing);
     res.send(purchasesAssociatedWithUser);
 
     // docs for mixins: https://sequelize.org/master/manual/assocs.html#one-to-many-relationships
@@ -90,7 +59,24 @@ export default function initPurchasesController(db) {
     // console.log(allPurchasesAssociatedWithUserId.length);
   };
 
+  const recordPurchase = async (req, res) => {
+    const { listingPK } = req.params;
+
+    // create a new entry in db.Purchase
+    const newPurchaseInstance = await db.Purchase.create({
+      listingId: listingPK,
+      purchaserId: req.userId,
+      purchaseStatus: 'committed',
+      paymentReceipt: req.file.location,
+      paymentStatus: 'processing',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    res.send();
+  };
+
   return {
-    index, countPurchasesPerListing, addReceipt, allPurchases,
+    index, countPurchasesPerListing, recordPurchase, allPurchases,
   };
 }

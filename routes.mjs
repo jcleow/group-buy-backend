@@ -72,7 +72,8 @@ export default function bindRoutes(app) {
   app.post('/register', UsersController.register);
 
   const PurchasesController = initPurchasesController(db);
-  app.post('/addReceipt', multerUpload.single('receiptImg'), PurchasesController.addReceipt);
+  app.post('/recordPurchase/:listingPK', multerUpload.single('receiptImg'), PurchasesController.recordPurchase);
+
   app.get('/purchases/count/:listingId', PurchasesController.countPurchasesPerListing);
   app.post('/allPurchases', PurchasesController.allPurchases);
 
