@@ -18,6 +18,9 @@ export default function initListingModel(sequelize, DataTypes) {
     quantity: {
       type: DataTypes.INTEGER,
     },
+    quantityRemaining: {
+      type: DataTypes.INTEGER,
+    },
     // minimum order quantity
     moq: {
       type: DataTypes.INTEGER,
