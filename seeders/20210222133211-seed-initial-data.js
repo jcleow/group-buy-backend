@@ -32,6 +32,10 @@ module.exports = {
     const arrOfPurchaseStatuses = ['committed', 'activated', 'pending fulfillment', 'fulfilled', 'cancelled'];
     const arrOfPaymentStatuses = ['processing', 'paid', 'refunded'];
 
+    function randomDate(start, end) {
+      return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    }
+
     for (let i = 0; i < 6; i += 1) {
       // $1 to $5
       const usualPriceAmt = Math.floor(Math.random() * 5) + 1;
@@ -62,6 +66,9 @@ module.exports = {
 
         // quantity (random num) //10 to 19
         quantity: Math.floor(Math.random() * 10) + 10,
+
+        // quantity remaining( random num) // 1-9
+        quantity_remaining: Math.floor(Math.random() * 10),
 
         // moq (random num) // 1 to 5
         moq: Math.floor(Math.random() * 5) + 1,
@@ -110,6 +117,8 @@ module.exports = {
         listing_id: Math.floor(Math.random() * 6) + 1,
         purchaser_id: Math.floor(Math.random() * 2) + 1,
         purchase_status: arrOfPurchaseStatuses[Math.floor(Math.random() * arrOfPurchaseStatuses.length)],
+        payment_receipt: 'https://www.citibank.com.sg/gcb/otherservices/images/paynow/step-4.jpg',
+        receiptUploadDate: randomDate(new Date(2020, 0, 1), new Date()),
         payment_status: arrOfPaymentStatuses[Math.floor(Math.random() * arrOfPaymentStatuses.length)],
         // dummy values
         amt_refunded: 0,

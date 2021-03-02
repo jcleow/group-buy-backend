@@ -13,6 +13,9 @@ export default function initPurchaseModel(sequelize, DataTypes) {
         key: 'id',
       },
     },
+    qty: {
+      type: DataTypes.INTEGER,
+    },
     purchaserId: {
       type: DataTypes.INTEGER,
       references: {
@@ -26,6 +29,9 @@ export default function initPurchaseModel(sequelize, DataTypes) {
     },
     paymentReceipt: {
       type: DataTypes.STRING,
+    },
+    receiptUploadDate: {
+      type: DataTypes.DATE,
     },
     paymentStatus: {
       type: DataTypes.ENUM('processing', 'paid', 'refunded'),

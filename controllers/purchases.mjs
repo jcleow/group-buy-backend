@@ -61,13 +61,16 @@ export default function initPurchasesController(db) {
 
   const recordPurchase = async (req, res) => {
     const { listingPK } = req.params;
+    const { qtyOrdered } = req.params;
 
     // create a new entry in db.Purchase
     const newPurchaseInstance = await db.Purchase.create({
       listingId: listingPK,
+      qty: qtyOrdered,
       purchaserId: req.userId,
       purchaseStatus: 'committed',
       paymentReceipt: req.file.location,
+      receiptUploadDate: new Date(),
       paymentStatus: 'processing',
       createdAt: new Date(),
       updatedAt: new Date(),
