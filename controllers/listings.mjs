@@ -1,4 +1,4 @@
-import multer from 'multer';
+import { generatePastSevenDays, convertToDdMm } from '../helper.mjs';
 
 export default function initListingsController(db) {
   /**
@@ -54,16 +54,17 @@ export default function initListingsController(db) {
 
   const getAllPurchases = async (req, res) => {
     const { listingId } = req.params;
-    console.log(listingId, 'listingId');
-    const allPurchases = await db.Purchase.findAll({
+    const allDetailedPurchasesInfo = await db.Purchase.findAll({
       where: {
         listingId,
       },
       include: 'purchaser',
     });
-    // Mutate allPurchases to only display the relevant fields on client's campaignProgress for a single listing
-    allPurchases.forEach((purchase) => {
-      // Purchase Data Field (not incl username & reputation) constitutes 1 row in campaignProgress table
+    // Mutate allPurchases to only display the relevant fields
+    // on client's campaignProgress for a single listing
+    const allFilteredPurchaseData = allDetailedPurchasesInfo.map((purchase) => {
+      // Purchase Data Field (not incl username & reputation)
+      // constitutes 1 row in campaignProgress table
       const purchaseData = {
         paymentStatus: true,
         // pending addition by jeremy
@@ -72,16 +73,43 @@ export default function initListingsController(db) {
         dateDelivered: true,
       };
       // Filter purchase variable only for the relevant fields and parse into purchaseData object
-      const relevantPurchaseKeys = Object.keys(purchase.dataValues).filter((key) => purchaseData[key]).forEach((key) => {
+      Object.keys(purchase.dataValues).filter((key) => purchaseData[key]).forEach((key) => {
         purchaseData[key] = purchase[key];
       });
 
-      // manually include purchaser's name and reputation as they are nested
+      // Manually include purchaser's name and reputation as they are nested
       purchaseData.username = purchase.purchaser.username;
       purchaseData.reputation = purchase.purchaser.reputation;
+
+      // **** Fictious quantity in purchases!! to be removed ***///
+      purchaseData.quantity = Math.floor(Math.random() * 100);
+      // *******************************************************//
+      return purchaseData;
     });
-    console.log(allPurchases);
-    res.send({ allPurchases });
+
+    const pastSevenDays = generatePastSevenDays();
+    // Create a tally of daily counts from all purchases
+    const dailyQuantityPurchased = {};
+    allFilteredPurchaseData.forEach((purchase) => {
+      // First convert purchase.createdAt to the same datestring format
+      const formattedCreatedDate = convertToDdMm(purchase.createdAt);
+      if (!dailyQuantityPurchased[formattedCreatedDate]) {
+        dailyQuantityPurchased[formattedCreatedDate] = purchase.quantity;
+      } else {
+        dailyQuantityPurchased[formattedCreatedDate] += purchase.quantity;
+      }
+    });
+    // Get only the past seven days count
+    const pastSevenDaysCount = pastSevenDays.map((day) => {
+      if (dailyQuantityPurchased[day]) {
+        return { x: day, y: dailyQuantityPurchased[day] };
+      }
+      return { x: day, y: 0 };
+    });
+    // console.log(allFilteredPurchaseData, 'allFilteredPurchaseData');
+    // console.log(pastSevenDaysCount, 'pastSevenDaysCount');
+    // console.log(dailyQuantityPurchased, 'dailyPurchasesCount');
+    res.send({ allFilteredPurchaseData, pastSevenDaysCount });
   };
 
   return {
