@@ -115,6 +115,7 @@ module.exports = {
     for (let i = 0; i < 3; i += 1) {
       const purchase = {
         listing_id: Math.floor(Math.random() * 6) + 1,
+        qty: Math.floor(Math.random() * 3) + 1,
         purchaser_id: Math.floor(Math.random() * 2) + 1,
         purchase_status: arrOfPurchaseStatuses[Math.floor(Math.random() * arrOfPurchaseStatuses.length)],
         payment_receipt: 'https://www.citibank.com.sg/gcb/otherservices/images/paynow/step-4.jpg',

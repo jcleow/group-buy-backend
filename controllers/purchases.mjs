@@ -76,6 +76,16 @@ export default function initPurchasesController(db) {
       updatedAt: new Date(),
     });
 
+    // update item's stock/ qtyRemaining in the listings table
+    const relatedListing = newPurchaseInstance.getListing();
+    // check if the mixin works:
+    console.log('relatedListing is');
+    console.log(relatedListing);
+    // deduct qty ordered from quantityRemaining
+    relatedListing.quantityRemaining -= qtyOrdered;
+    // save the update
+    relatedListing.save();
+
     res.send();
   };
 
