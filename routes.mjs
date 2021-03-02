@@ -79,6 +79,8 @@ export default function bindRoutes(app) {
 
   const ListingsController = initListingsController(db);
   app.get('/listings', ListingsController.index);
+  // To get all purchases associated with a listing
+  app.get('/listing/:listingId/allPurchases', ListingsController.getAllPurchases);
   app.post('/createListing', ListingsController.create);
   // Used multerUpload.array and req files was empty hence use .any() instead.
   // https://stackoverflow.com/questions/46987140/express-multer-upload-doesnt-work

@@ -36,6 +36,9 @@ export default function initPurchaseModel(sequelize, DataTypes) {
     refundTier: {
       type: DataTypes.ENUM('1', '2'),
     },
+    dateDelivered: {
+      type: DataTypes.DATE(),
+    },
     createdAt: {
       allowNull: false,
       type: DataTypes.DATE,
