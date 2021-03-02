@@ -12,7 +12,8 @@ export default function initListingsController(db) {
       .then((listings) => {
         // Find the list of unique categories
         const categories = db.Listing.rawAttributes.category.values;
-        response.status(200).send({ listings, categories });
+        const listingStatus = db.Listing.rawAttributes.listingStatus.values;
+        response.status(200).send({ listings, categories, listingStatus });
       })
       .catch((error) => console.log(error));
   };
