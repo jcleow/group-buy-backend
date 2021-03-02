@@ -61,27 +61,25 @@ export default function initListingsController(db) {
       include: 'purchaser',
     });
     console.log(allPurchases, 'allPurchases');
-    // Wrangle the relevant fields to send to client
-
+    // Mutate allPurchases to only display the relevant fields on client's campaignProgress for a single listing
     allPurchases.forEach((purchase) => {
       console.log(purchase, 'purchase');
+      // Purchase Data Field (not incl username & reputation) constitutes 1 row in campaignProgress table
       const purchaseData = {
-        username: true,
         paymentStatus: true,
+        // pending addition by jeremy
         quantity: true,
         createdAt: true,
-        // To calculate from DB?
-        reputation: true,
-        // To add into DB
         dateDelivered: true,
       };
+      // Filter purchase variable only for the relevant fields and parse into purchaseData object
       const relevantPurchaseKeys = Object.keys(purchase.dataValues).filter((key) => purchaseData[key]).forEach((key) => {
         purchaseData[key] = purchase[key];
       });
 
-      // manually include purchaser's name
-      purchaseData.username = purchase.username;
-      console.log(purchaseData, 'purchaseData');
+      // manually include purchaser's name and reputation as they are nested
+      purchaseData.username = purchase.purchaser.username;
+      purchaseData.reputation = purchase.purchaser.reputation;
     });
 
     res.send({ allPurchases });

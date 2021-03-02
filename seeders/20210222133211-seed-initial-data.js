@@ -12,6 +12,7 @@ module.exports = {
         email: 'user1@gmail.com',
         handphone_num: '+6589891234',
         password: hashedPassword,
+        reputation: 30,
         created_at: new Date(),
         updated_at: new Date(),
       }, {
@@ -19,6 +20,7 @@ module.exports = {
         email: 'user2@gmail.com',
         handphone_num: '+6587459621',
         password: hashedPassword,
+        reputation: 50,
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -112,6 +114,7 @@ module.exports = {
         // dummy values
         amt_refunded: 0,
         refund_tier: '2',
+        date_delivered: new Date(),
         created_at: new Date(),
         updated_at: new Date(),
       };
