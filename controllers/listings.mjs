@@ -80,29 +80,35 @@ export default function initListingsController(db) {
       // Manually include purchaser's name and reputation as they are nested
       purchaseData.username = purchase.purchaser.username;
       purchaseData.reputation = purchase.purchaser.reputation;
+
+      // **** Fictious quantity in purchases!! to be removed ***///
+      purchaseData.quantity = Math.floor(Math.random() * 100);
+      // *******************************************************//
       return purchaseData;
     });
 
     const pastSevenDays = generatePastSevenDays();
     // Create a tally of daily counts from all purchases
-    const dailyPurchasesCount = {};
+    const dailyQuantityPurchased = {};
     allFilteredPurchaseData.forEach((purchase) => {
       // First convert purchase.createdAt to the same datestring format
       const formattedCreatedDate = convertToDdMm(purchase.createdAt);
-      if (!dailyPurchasesCount[formattedCreatedDate]) {
-        dailyPurchasesCount[formattedCreatedDate] = 1;
+      if (!dailyQuantityPurchased[formattedCreatedDate]) {
+        dailyQuantityPurchased[formattedCreatedDate] = purchase.quantity;
       } else {
-        dailyPurchasesCount[formattedCreatedDate] += 1;
+        dailyQuantityPurchased[formattedCreatedDate] += purchase.quantity;
       }
     });
     // Get only the past seven days count
     const pastSevenDaysCount = pastSevenDays.map((day) => {
-      if (dailyPurchasesCount[day]) {
-        return { x: day, y: dailyPurchasesCount[day] };
+      if (dailyQuantityPurchased[day]) {
+        return { x: day, y: dailyQuantityPurchased[day] };
       }
       return { x: day, y: 0 };
     });
-
+    // console.log(allFilteredPurchaseData, 'allFilteredPurchaseData');
+    // console.log(pastSevenDaysCount, 'pastSevenDaysCount');
+    // console.log(dailyQuantityPurchased, 'dailyPurchasesCount');
     res.send({ allFilteredPurchaseData, pastSevenDaysCount });
   };
 
