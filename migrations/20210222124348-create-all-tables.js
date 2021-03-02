@@ -54,6 +54,10 @@ module.exports = {
       quantity: {
         type: Sequelize.INTEGER,
       },
+      // tracks how many units are available for puchase (i.e. the stock)
+      quantity_remaining: {
+        type: Sequelize.INTEGER,
+      },
       // minimum order quantity
       moq: {
         type: Sequelize.INTEGER,
@@ -124,6 +128,9 @@ module.exports = {
           key: 'id',
         },
       },
+      qty: {
+        type: Sequelize.INTEGER,
+      },
       purchaser_id: {
         type: Sequelize.INTEGER,
         references: {
@@ -137,6 +144,9 @@ module.exports = {
       },
       payment_receipt: {
         type: Sequelize.STRING,
+      },
+      receipt_upload_date: {
+        type: Sequelize.DATE,
       },
       payment_status: {
         type: Sequelize.ENUM('processing', 'paid', 'refunded'),
