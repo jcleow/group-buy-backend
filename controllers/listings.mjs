@@ -52,6 +52,66 @@ export default function initListingsController(db) {
     res.send({ message: 'upload complete' });
   };
 
+  /**
+   * Function to update an existing listing data
+   */
+  const updateListing = async (request, response) => {
+    console.log('updateListing');
+
+    console.log('request.params', request.params);
+    console.log('request.body', request.body);
+    console.log('request.files', request.files);
+
+    const { updatedListingData } = request.body;
+    const { listingId } = request.params;
+
+    // Reorder the image keys, if they are not in order
+    const existingImages = (!updatedListingData.images)
+      ? [] : Object.values(updatedListingData.images);
+    if (existingImages.length !== 0) {
+      existingImages.forEach((imgSrc, imgIndex) => {
+        updatedListingData.images[`img${imgIndex + 1}`] = imgSrc;
+      });
+    }
+    const updatingListing = await db.Listing.findByPk(Number(listingId));
+    if (updatingListing === null || undefined === updatingListing
+      || updatingListing.id !== updatedListingData.id) {
+      response.send({ message: 'Not a valid listing' });
+    }
+    Object.keys(updatedListingData).forEach((key) => {
+      updatingListing[key] = updatedListingData[key];
+    });
+    // updatingListing = { ...updatedListingData };
+    const updatedListing = await updatingListing.save();
+    console.log('Succesfully updated');
+
+    response.send({ message: 'Update completed', updatedListing });
+  };
+
+  const updateListingImages = async (request, response) => {
+    const { listingId } = request.params;
+    const newListing = await db.Listing.findByPk(Number(listingId));
+    // First get all the image files names already existing db
+    // Get the last key value and get it's index
+    let imageStartIndex = 0;
+    if (newListing.images) {
+      const numOfImages = Object.keys(newListing.images).length;
+      // Get the last index after 'img' in key
+      imageStartIndex = Number(Object.keys(newListing.images)[numOfImages - 1].substr(3));
+      imageStartIndex += 1;
+    }
+    // Add the new image files to the existing ones
+
+    // Create a hashmap of all the image urls
+    request.files.forEach((file, idx) => {
+      newListing.images[`img${imageStartIndex + idx}`] = file.location;
+    });
+
+    const updatedListing = await newListing.save();
+
+    response.send({ message: 'Image upload completed', updatedListing });
+  };
+
   const getAllPurchases = async (req, res) => {
     const { listingId } = req.params;
     const allDetailedPurchasesInfo = await db.Purchase.findAll({
@@ -118,6 +178,8 @@ export default function initListingsController(db) {
     index,
     create,
     uploadCampaignPictures,
+    updateListing,
+    updateListingImages,
     getAllPurchases,
   };
 }

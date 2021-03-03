@@ -86,4 +86,8 @@ export default function bindRoutes(app) {
   // https://stackoverflow.com/questions/46987140/express-multer-upload-doesnt-work
   // Accepts all files that comes over the wire. An array of files will be stored in req.files.
   app.post('/listings/:listingId/uploadCampaignPictures', multerUpload.any('campaignImages'), ListingsController.uploadCampaignPictures);
+
+  // To update an already existing data
+  app.post('/listings/:listingId/update', ListingsController.updateListing);
+  app.post('/listings/:listingId/update/images', multerUpload.any('campaignImages'), ListingsController.updateListingImages);
 }
