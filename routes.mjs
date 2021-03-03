@@ -79,6 +79,7 @@ export default function bindRoutes(app) {
 
   const ListingsController = initListingsController(db);
   app.get('/listings', ListingsController.index);
+  app.get('/listing/:listingId', ListingsController.index);
   // To get all purchases associated with a listing
   app.get('/listing/:listingId/allPurchases', ListingsController.getAllPurchases);
   app.post('/createListing', ListingsController.create);
