@@ -19,3 +19,21 @@ export const hashPassword = (reqBodyPassword) => {
   const hash = shaObj.getHash('HEX');
   return hash;
 };
+// Helper that generates and pushes the past 7 days
+export const generatePastSevenDays = () => {
+  const pastSevenDaysArray = [];
+  for (let i = 7; i >= 0; i -= 1) {
+    const singleDate = new Date();
+    singleDate.setDate(singleDate.getDate() - i);
+    const options = { day: '2-digit', month: '2-digit' };
+    const formattedDate = singleDate.toLocaleDateString('en-GB', options);
+    pastSevenDaysArray.push(formattedDate);
+  }
+  return pastSevenDaysArray;
+};
+
+// Helper that converts a single date into a dd/mm format
+export const convertToDdMm = (dateObj) => {
+  const options = { day: '2-digit', month: '2-digit' };
+  return dateObj.toLocaleDateString('en-GB', options);
+};
