@@ -52,6 +52,18 @@ export default function initListingsController(db) {
     res.send({ message: 'upload complete' });
   };
 
+  /**
+   * Function to update an existing listing data
+   */
+  const updateListing = async (request, response) => {
+    const { listingId } = request.params;
+    const updatingListing = await db.Listing.findByPk(Number(listingId));
+    // save
+    await updatingListing.save();
+
+    response.send({ message: 'Update completed' });
+  };
+
   const getAllPurchases = async (req, res) => {
     const { listingId } = req.params;
     console.log(listingId, 'listingId');
@@ -88,6 +100,7 @@ export default function initListingsController(db) {
     index,
     create,
     uploadCampaignPictures,
+    updateListing,
     getAllPurchases,
   };
 }
