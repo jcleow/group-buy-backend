@@ -66,6 +66,7 @@ export default function initListingsController(db) {
       // Purchase Data Field (not incl username & reputation)
       // constitutes 1 row in campaignProgress table
       const purchaseData = {
+        id: true,
         paymentStatus: true,
         // pending addition by jeremy
         quantity: true,
@@ -73,9 +74,12 @@ export default function initListingsController(db) {
         dateDelivered: true,
       };
       // Filter purchase variable only for the relevant fields and parse into purchaseData object
-      Object.keys(purchase.dataValues).filter((key) => purchaseData[key]).forEach((key) => {
+      Object.keys(purchase.dataValues).filter(
+        (key) => purchaseData[key],
+      ).forEach((key) => {
         purchaseData[key] = purchase[key];
       });
+      console.log(purchase.dataValues, 'purchase-dataValues');
 
       // Manually include purchaser's name and reputation as they are nested
       purchaseData.username = purchase.purchaser.username;
@@ -84,6 +88,7 @@ export default function initListingsController(db) {
       // **** Fictious quantity in purchases!! to be removed ***///
       purchaseData.quantity = Math.floor(Math.random() * 100);
       // *******************************************************//
+      console.log(purchaseData, 'purchaseData');
       return purchaseData;
     });
 
@@ -106,9 +111,6 @@ export default function initListingsController(db) {
       }
       return { x: day, y: 0 };
     });
-    // console.log(allFilteredPurchaseData, 'allFilteredPurchaseData');
-    // console.log(pastSevenDaysCount, 'pastSevenDaysCount');
-    // console.log(dailyQuantityPurchased, 'dailyPurchasesCount');
     res.send({ allFilteredPurchaseData, pastSevenDaysCount });
   };
 
