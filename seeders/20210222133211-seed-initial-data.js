@@ -158,6 +158,8 @@ module.exports = {
           purchase_date: arrOfDates[index],
           date_receipt_approved: receiptApprovedDate,
           date_moq_reached: moqDate,
+          created_at: new Date(),
+          updated_at: new Date(),
         },
       );
     });

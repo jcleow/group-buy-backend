@@ -27,6 +27,14 @@ export default function initOrderTrackerModel(sequelize, DataTypes) {
       type: DataTypes.DATE,
       defaultValue: null,
     },
+    createdAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+    },
+    updatedAt: {
+      allowNull: false,
+      type: DataTypes.DATE,
+    },
   }, {
     underscored: true,
   });
