@@ -4,8 +4,6 @@ export default function initListingsController(db) {
   /**
    * Function to return all the listings present in database
    * It also returns the list of unique categories
-   * @param request
-   * @param response
    */
   const index = async (request, response) => {
     db.Listing.findAll()
@@ -13,9 +11,21 @@ export default function initListingsController(db) {
         // Find the list of unique categories
         const categories = db.Listing.rawAttributes.category.values;
         const listingStatus = db.Listing.rawAttributes.listingStatus.values;
-        response.status(200).send({ listings, categories, listingStatus });
+        const deliveryModes = db.Listing.rawAttributes.deliveryMode.values;
+        response.status(200).send({
+          listings, categories, listingStatus, deliveryModes,
+        });
       })
       .catch((error) => console.log(error));
+  };
+
+  const getListing = async (request, response) => {
+    const { listingId } = request.params;
+    const selectedListing = await db.Listing.findByPk(Number(listingId));
+    if (selectedListing === null || undefined === selectedListing) {
+      response.status(400).send({ message: 'Not a valid listing', selectedListing });
+    }
+    response.status(200).send({ selectedListing });
   };
 
   const create = async (req, res) => {
@@ -85,7 +95,7 @@ export default function initListingsController(db) {
     const updatedListing = await updatingListing.save();
     console.log('Succesfully updated');
 
-    response.send({ message: 'Update completed', updatedListing });
+    response.status(200).send({ message: 'Update completed', updatedListing });
   };
 
   const updateListingImages = async (request, response) => {
@@ -109,7 +119,7 @@ export default function initListingsController(db) {
 
     const updatedListing = await newListing.save();
 
-    response.send({ message: 'Image upload completed', updatedListing });
+    response.status(200).send({ message: 'Image upload completed', updatedListing });
   };
 
   const getAllPurchases = async (req, res) => {
@@ -176,6 +186,7 @@ export default function initListingsController(db) {
 
   return {
     index,
+    getListing,
     create,
     uploadCampaignPictures,
     updateListing,
