@@ -144,11 +144,7 @@ module.exports = {
     const arrOfOrderTrackers = [];
     arrOfPurchases.forEach((purchase, index) => {
       // selected listing is an array containing a single el, which is the data of a single listing
-      const selectedListingArr = arrOfListings.filter((listing) => {
-        console.log(purchase.listing_id, 'purchase.listing_id');
-        console.log(listing.id, 'listing.id');
-        return listing.id === purchase.listing_id;
-      });
+      const selectedListingArr = arrOfListings.filter((listing) => listing.id === purchase.listing_id);
       const [selectedListing] = selectedListingArr;
 
       const { start_date } = selectedListing;
@@ -167,10 +163,6 @@ module.exports = {
     });
 
     arrOfListings.forEach((listing) => { delete listing.id; });
-    console.log('==================');
-    console.log(arrOfListings);
-
-    console.log(arrOfListings[0].id, 'check delete fn');
 
     await queryInterface.bulkInsert('users', usersList);
     await queryInterface.bulkInsert('listings', arrOfListings);
