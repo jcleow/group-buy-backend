@@ -90,7 +90,21 @@ export default function initPurchasesController(db) {
     res.send();
   };
 
+  const updateDateDelivered = async (req, res) => {
+    const { purchaseId } = req.params;
+    const { formattedNewDate } = req.body;
+    await db.Purchase.update(
+      { dateDelivered: formattedNewDate },
+      {
+        where: {
+          id: purchaseId,
+        },
+      },
+    );
+    res.send({ message: 'updated' });
+  };
+
   return {
-    index, countPurchasesPerListing, recordPurchase, allPurchases,
+    index, countPurchasesPerListing, recordPurchase, allPurchases, updateDateDelivered,
   };
 }

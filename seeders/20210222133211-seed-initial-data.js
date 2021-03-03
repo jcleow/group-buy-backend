@@ -126,7 +126,7 @@ module.exports = {
         // dummy values
         amt_refunded: 0,
         refund_tier: '2',
-        date_delivered: singleDate,
+        date_delivered: null,
         created_at: singleDate,
         updated_at: singleDate,
       };

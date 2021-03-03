@@ -73,9 +73,9 @@ export default function bindRoutes(app) {
 
   const PurchasesController = initPurchasesController(db);
   app.post('/recordPurchase/:listingPK/:qtyOrdered', multerUpload.single('receiptImg'), PurchasesController.recordPurchase);
-
   app.get('/purchases/count/:listingId', PurchasesController.countPurchasesPerListing);
   app.post('/allPurchases', PurchasesController.allPurchases);
+  app.put('/listing/:currListingId/purchase/:purchaseId/date', PurchasesController.updateDateDelivered);
 
   const ListingsController = initListingsController(db);
   app.get('/listings', ListingsController.index);
