@@ -70,7 +70,6 @@ export default function initListingsController(db) {
 
     console.log('request.params', request.params);
     console.log('request.body', request.body);
-    console.log('request.files', request.files);
 
     const { updatedListingData } = request.body;
     const { listingId } = request.params;
@@ -100,6 +99,7 @@ export default function initListingsController(db) {
 
   const updateListingImages = async (request, response) => {
     const { listingId } = request.params;
+    console.log('request.files', request.files);
     const newListing = await db.Listing.findByPk(Number(listingId));
     // First get all the image files names already existing db
     // Get the last key value and get it's index
@@ -110,6 +110,8 @@ export default function initListingsController(db) {
       imageStartIndex = Number(Object.keys(newListing.images)[numOfImages - 1].substr(3));
       imageStartIndex += 1;
     }
+
+    console.log('imageStartIndex', imageStartIndex);
     // Add the new image files to the existing ones
 
     // Create a hashmap of all the image urls
@@ -117,7 +119,19 @@ export default function initListingsController(db) {
       newListing.images[`img${imageStartIndex + idx}`] = file.location;
     });
 
-    const updatedListing = await newListing.save();
+    console.log('data in newListing images', newListing.images);
+    console.log('typeof images', typeof (newListing.images));
+
+    let updatedListing = null;
+    try
+    {
+      newListing.changed('images', true);
+      updatedListing = await newListing.save();
+    }
+    catch (err) {
+      console.log(err);
+    }
+    console.log('updatedListing', updatedListing);
 
     response.status(200).send({ message: 'Image upload completed', updatedListing });
   };
