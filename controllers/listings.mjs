@@ -195,7 +195,7 @@ export default function initListingsController(db) {
             lister_id: req.loggedInUserId,
           },
         });
-        const formattedMyListings = myListingsArr.map((listing, i) => ({
+        const formattedMyListings = myListingsArr.map((listing) => ({
           ...listing.dataValues,
           startDate: convertToDdMmYy(listing.dataValues.startDate),
           endDate: convertToDdMmYy(listing.dataValues.endDate),
