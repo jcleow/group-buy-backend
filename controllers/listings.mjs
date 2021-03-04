@@ -1,4 +1,4 @@
-import { generatePastSevenDays, convertToDdMm } from '../helper.mjs';
+import { generatePastSevenDays, convertToDdMm, convertToDdMmYy } from '../helper.mjs';
 
 export default function initListingsController(db) {
   /**
@@ -184,8 +184,30 @@ export default function initListingsController(db) {
     res.send({ allFilteredPurchaseData, pastSevenDaysCount });
   };
 
-  const myListings = () => {
+  // Retrieve user's listings
 
+  const myListings = async (req, res) => {
+    try {
+    // If authenticated
+      if (req.loggedInUserId) {
+        const myListingsArr = await db.Listing.findAll({
+          where: {
+            lister_id: req.loggedInUserId,
+          },
+        });
+        const formattedMyListings = myListingsArr.map((listing, i) => ({
+          ...listing.dataValues,
+          startDate: convertToDdMmYy(listing.dataValues.startDate),
+          endDate: convertToDdMmYy(listing.dataValues.endDate),
+        }));
+        res.send({ message: 'success', formattedMyListings });
+      // Else say you are not authenticated
+      } else {
+        res.send({ message: 'failure' });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return {
@@ -196,5 +218,6 @@ export default function initListingsController(db) {
     updateListing,
     updateListingImages,
     getAllPurchases,
+    myListings,
   };
 }

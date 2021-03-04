@@ -37,3 +37,9 @@ export const convertToDdMm = (dateObj) => {
   const options = { day: '2-digit', month: '2-digit' };
   return dateObj.toLocaleDateString('en-GB', options);
 };
+
+// Helper that converts a single date into a dd/mm format
+export const convertToDdMmYy = (dateObj) => {
+  const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
+  return dateObj.toLocaleDateString('en-GB', options);
+};
