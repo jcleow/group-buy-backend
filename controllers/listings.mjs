@@ -184,6 +184,10 @@ export default function initListingsController(db) {
     res.send({ allFilteredPurchaseData, pastSevenDaysCount });
   };
 
+  const myListings = () => {
+
+  };
+
   return {
     index,
     getListing,
