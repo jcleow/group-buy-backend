@@ -66,11 +66,6 @@ export default function initListingsController(db) {
    * Function to update an existing listing data
    */
   const updateListing = async (request, response) => {
-    console.log('updateListing');
-
-    console.log('request.params', request.params);
-    console.log('request.body', request.body);
-
     const { updatedListingData } = request.body;
     const { listingId } = request.params;
 
@@ -90,16 +85,14 @@ export default function initListingsController(db) {
     Object.keys(updatedListingData).forEach((key) => {
       updatingListing[key] = updatedListingData[key];
     });
-    // updatingListing = { ...updatedListingData };
-    const updatedListing = await updatingListing.save();
-    console.log('Succesfully updated');
 
+    updatingListing.changed('images', true);
+    const updatedListing = await updatingListing.save();
     response.status(200).send({ message: 'Update completed', updatedListing });
   };
 
   const updateListingImages = async (request, response) => {
     const { listingId } = request.params;
-    console.log('request.files', request.files);
     const newListing = await db.Listing.findByPk(Number(listingId));
     // First get all the image files names already existing db
     // Get the last key value and get it's index
@@ -110,17 +103,11 @@ export default function initListingsController(db) {
       imageStartIndex = Number(Object.keys(newListing.images)[numOfImages - 1].substr(3));
       imageStartIndex += 1;
     }
-
-    console.log('imageStartIndex', imageStartIndex);
     // Add the new image files to the existing ones
-
     // Create a hashmap of all the image urls
     request.files.forEach((file, idx) => {
       newListing.images[`img${imageStartIndex + idx}`] = file.location;
     });
-
-    console.log('data in newListing images', newListing.images);
-    console.log('typeof images', typeof (newListing.images));
 
     let updatedListing = null;
     try
@@ -131,8 +118,6 @@ export default function initListingsController(db) {
     catch (err) {
       console.log(err);
     }
-    console.log('updatedListing', updatedListing);
-
     response.status(200).send({ message: 'Image upload completed', updatedListing });
   };
 
