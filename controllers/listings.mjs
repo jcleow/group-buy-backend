@@ -148,7 +148,6 @@ export default function initListingsController(db) {
       ).forEach((key) => {
         purchaseData[key] = purchase[key];
       });
-      console.log(purchase.dataValues, 'purchase-dataValues');
 
       // Manually include purchaser's name and reputation as they are nested
       purchaseData.username = purchase.purchaser.username;
@@ -157,7 +156,6 @@ export default function initListingsController(db) {
       // **** Fictious quantity in purchases!! to be removed ***///
       purchaseData.quantity = Math.floor(Math.random() * 100);
       // *******************************************************//
-      console.log(purchaseData, 'purchaseData');
       return purchaseData;
     });
 
