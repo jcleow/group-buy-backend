@@ -45,7 +45,7 @@ export default function initPurchasesController(db) {
       where: {
         purchaser_id: userId,
       },
-      include: [{ model: db.Listing }],
+      include: [{ model: db.Listing }, { model: db.OrderTracker }],
     });
     console.log(purchasesAssociatedWithUser);
     res.send(purchasesAssociatedWithUser);
