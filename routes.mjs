@@ -74,6 +74,7 @@ export default function bindRoutes(app) {
   const PurchasesController = initPurchasesController(db);
   app.post('/recordPurchase/:listingPK/:qtyOrdered', multerUpload.single('receiptImg'), PurchasesController.recordPurchase);
   app.get('/purchases/count/:listingId', PurchasesController.countPurchasesPerListing);
+  // get all purchases to display in MyProfile
   app.post('/allPurchases', PurchasesController.allPurchases);
   app.put('/listing/:currListingId/purchase/:purchaseId/date', PurchasesController.updateDateDelivered);
 
