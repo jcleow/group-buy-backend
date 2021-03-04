@@ -150,7 +150,8 @@ module.exports = {
       const { start_date } = selectedListing;
 
       const moqDate = new Date(start_date.setDate(selectedListing.start_date.getDate() + 6));
-      const receiptApprovedDate = new Date(arrOfDates[index].setDate(arrOfDates[index].getDate() + 2));
+
+      const receiptApprovedDate = new Date(arrOfDates[index].getFullYear(), arrOfDates[index].getMonth(), arrOfDates[index].getDate() + 2);
 
       arrOfOrderTrackers.push(
         {
