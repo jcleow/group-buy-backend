@@ -66,12 +66,6 @@ export default function initListingsController(db) {
    * Function to update an existing listing data
    */
   const updateListing = async (request, response) => {
-    console.log('updateListing');
-
-    console.log('request.params', request.params);
-    console.log('request.body', request.body);
-    console.log('request.files', request.files);
-
     const { updatedListingData } = request.body;
     const { listingId } = request.params;
 
@@ -91,10 +85,9 @@ export default function initListingsController(db) {
     Object.keys(updatedListingData).forEach((key) => {
       updatingListing[key] = updatedListingData[key];
     });
-    // updatingListing = { ...updatedListingData };
-    const updatedListing = await updatingListing.save();
-    console.log('Succesfully updated');
 
+    updatingListing.changed('images', true);
+    const updatedListing = await updatingListing.save();
     response.status(200).send({ message: 'Update completed', updatedListing });
   };
 
@@ -111,14 +104,20 @@ export default function initListingsController(db) {
       imageStartIndex += 1;
     }
     // Add the new image files to the existing ones
-
     // Create a hashmap of all the image urls
     request.files.forEach((file, idx) => {
       newListing.images[`img${imageStartIndex + idx}`] = file.location;
     });
 
-    const updatedListing = await newListing.save();
-
+    let updatedListing = null;
+    try
+    {
+      newListing.changed('images', true);
+      updatedListing = await newListing.save();
+    }
+    catch (err) {
+      console.log(err);
+    }
     response.status(200).send({ message: 'Image upload completed', updatedListing });
   };
 
