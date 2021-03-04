@@ -4,8 +4,6 @@ export default function initListingsController(db) {
   /**
    * Function to return all the listings present in database
    * It also returns the list of unique categories
-   * @param request
-   * @param response
    */
   const index = async (request, response) => {
     db.Listing.findAll()
@@ -13,9 +11,21 @@ export default function initListingsController(db) {
         // Find the list of unique categories
         const categories = db.Listing.rawAttributes.category.values;
         const listingStatus = db.Listing.rawAttributes.listingStatus.values;
-        response.status(200).send({ listings, categories, listingStatus });
+        const deliveryModes = db.Listing.rawAttributes.deliveryMode.values;
+        response.status(200).send({
+          listings, categories, listingStatus, deliveryModes,
+        });
       })
       .catch((error) => console.log(error));
+  };
+
+  const getListing = async (request, response) => {
+    const { listingId } = request.params;
+    const selectedListing = await db.Listing.findByPk(Number(listingId));
+    if (selectedListing === null || undefined === selectedListing) {
+      response.status(400).send({ message: 'Not a valid listing', selectedListing });
+    }
+    response.status(200).send({ selectedListing });
   };
 
   const create = async (req, res) => {
@@ -52,6 +62,66 @@ export default function initListingsController(db) {
     res.send({ message: 'upload complete' });
   };
 
+  /**
+   * Function to update an existing listing data
+   */
+  const updateListing = async (request, response) => {
+    console.log('updateListing');
+
+    console.log('request.params', request.params);
+    console.log('request.body', request.body);
+    console.log('request.files', request.files);
+
+    const { updatedListingData } = request.body;
+    const { listingId } = request.params;
+
+    // Reorder the image keys, if they are not in order
+    const existingImages = (!updatedListingData.images)
+      ? [] : Object.values(updatedListingData.images);
+    if (existingImages.length !== 0) {
+      existingImages.forEach((imgSrc, imgIndex) => {
+        updatedListingData.images[`img${imgIndex + 1}`] = imgSrc;
+      });
+    }
+    const updatingListing = await db.Listing.findByPk(Number(listingId));
+    if (updatingListing === null || undefined === updatingListing
+      || updatingListing.id !== updatedListingData.id) {
+      response.send({ message: 'Not a valid listing' });
+    }
+    Object.keys(updatedListingData).forEach((key) => {
+      updatingListing[key] = updatedListingData[key];
+    });
+    // updatingListing = { ...updatedListingData };
+    const updatedListing = await updatingListing.save();
+    console.log('Succesfully updated');
+
+    response.status(200).send({ message: 'Update completed', updatedListing });
+  };
+
+  const updateListingImages = async (request, response) => {
+    const { listingId } = request.params;
+    const newListing = await db.Listing.findByPk(Number(listingId));
+    // First get all the image files names already existing db
+    // Get the last key value and get it's index
+    let imageStartIndex = 0;
+    if (newListing.images) {
+      const numOfImages = Object.keys(newListing.images).length;
+      // Get the last index after 'img' in key
+      imageStartIndex = Number(Object.keys(newListing.images)[numOfImages - 1].substr(3));
+      imageStartIndex += 1;
+    }
+    // Add the new image files to the existing ones
+
+    // Create a hashmap of all the image urls
+    request.files.forEach((file, idx) => {
+      newListing.images[`img${imageStartIndex + idx}`] = file.location;
+    });
+
+    const updatedListing = await newListing.save();
+
+    response.status(200).send({ message: 'Image upload completed', updatedListing });
+  };
+
   const getAllPurchases = async (req, res) => {
     const { listingId } = req.params;
     const allDetailedPurchasesInfo = await db.Purchase.findAll({
@@ -66,6 +136,7 @@ export default function initListingsController(db) {
       // Purchase Data Field (not incl username & reputation)
       // constitutes 1 row in campaignProgress table
       const purchaseData = {
+        id: true,
         paymentStatus: true,
         // pending addition by jeremy
         quantity: true,
@@ -73,9 +144,12 @@ export default function initListingsController(db) {
         dateDelivered: true,
       };
       // Filter purchase variable only for the relevant fields and parse into purchaseData object
-      Object.keys(purchase.dataValues).filter((key) => purchaseData[key]).forEach((key) => {
+      Object.keys(purchase.dataValues).filter(
+        (key) => purchaseData[key],
+      ).forEach((key) => {
         purchaseData[key] = purchase[key];
       });
+      console.log(purchase.dataValues, 'purchase-dataValues');
 
       // Manually include purchaser's name and reputation as they are nested
       purchaseData.username = purchase.purchaser.username;
@@ -84,6 +158,7 @@ export default function initListingsController(db) {
       // **** Fictious quantity in purchases!! to be removed ***///
       purchaseData.quantity = Math.floor(Math.random() * 100);
       // *******************************************************//
+      console.log(purchaseData, 'purchaseData');
       return purchaseData;
     });
 
@@ -106,16 +181,16 @@ export default function initListingsController(db) {
       }
       return { x: day, y: 0 };
     });
-    // console.log(allFilteredPurchaseData, 'allFilteredPurchaseData');
-    // console.log(pastSevenDaysCount, 'pastSevenDaysCount');
-    // console.log(dailyQuantityPurchased, 'dailyPurchasesCount');
     res.send({ allFilteredPurchaseData, pastSevenDaysCount });
   };
 
   return {
     index,
+    getListing,
     create,
     uploadCampaignPictures,
+    updateListing,
+    updateListingImages,
     getAllPurchases,
   };
 }

@@ -76,9 +76,11 @@ export default function bindRoutes(app) {
   app.get('/purchases/count/:listingId', PurchasesController.countPurchasesPerListing);
   // get all purchases to display in MyProfile
   app.post('/allPurchases', PurchasesController.allPurchases);
+  app.put('/listing/:currListingId/purchase/:purchaseId/date', PurchasesController.updateDateDelivered);
 
   const ListingsController = initListingsController(db);
   app.get('/listings', ListingsController.index);
+  app.get('/listing/:listingId', ListingsController.getListing);
   // To get all purchases associated with a listing
   app.get('/listing/:listingId/allPurchases', ListingsController.getAllPurchases);
   app.post('/createListing', ListingsController.create);
@@ -86,4 +88,8 @@ export default function bindRoutes(app) {
   // https://stackoverflow.com/questions/46987140/express-multer-upload-doesnt-work
   // Accepts all files that comes over the wire. An array of files will be stored in req.files.
   app.post('/listings/:listingId/uploadCampaignPictures', multerUpload.any('campaignImages'), ListingsController.uploadCampaignPictures);
+
+  // To update an already existing data
+  app.post('/listings/:listingId/update', ListingsController.updateListing);
+  app.post('/listings/:listingId/update/images', multerUpload.any('campaignImages'), ListingsController.updateListingImages);
 }

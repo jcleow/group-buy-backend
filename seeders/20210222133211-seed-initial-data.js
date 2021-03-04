@@ -130,7 +130,7 @@ module.exports = {
         // dummy values
         amt_refunded: 0,
         refund_tier: '2',
-        date_delivered: singleDate,
+        date_delivered: null,
         // both of the below were changed from singleDate to arrOfDates[i], which is synced to the receipt upload date.
         // logic is tt the entry create date shld be initially same as the payment date
         created_at: arrOfDates[i],
