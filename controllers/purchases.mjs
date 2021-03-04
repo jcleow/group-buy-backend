@@ -45,7 +45,7 @@ export default function initPurchasesController(db) {
       where: {
         purchaser_id: userId,
       },
-      include: [{ model: db.Listing }],
+      include: [{ model: db.Listing }, { model: db.OrderTracker }],
     });
     console.log(purchasesAssociatedWithUser);
     res.send(purchasesAssociatedWithUser);
@@ -80,13 +80,28 @@ export default function initPurchasesController(db) {
     // update item's stock/ qtyRemaining in the listings table
     const relatedListing = await newPurchaseInstance.getListing();
     // check if the mixin works:
-    console.log('relatedListing is');
-    console.log(relatedListing);
+
     // deduct qty ordered from quantityRemaining
     relatedListing.quantityRemaining -= qtyOrdered;
     // save the update
     relatedListing.save();
 
+    try {
+    // create an entry in the order_trackers table; update orderId and purchase date
+      const newOrderTrackerInstance = await db.OrderTracker.create({
+        purchaseDate: new Date(),
+        purchaseId: newPurchaseInstance.id,
+      });
+
+      // check if the MOQ has been reached; if yes, update the order tracker accordingly.
+      const { quantity, quantityRemaining, moq } = relatedListing;
+      if (quantity - quantityRemaining >= moq) {
+        console.log('====================MOQ REACHED====================');
+        newOrderTrackerInstance.dateMoqReached = new Date();
+        newOrderTrackerInstance.save();
+      }
+    } catch (error) {
+      console.log(error); }
     res.send();
   };
 

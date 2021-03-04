@@ -41,16 +41,22 @@ module.exports = {
       const usualPriceAmt = Math.floor(Math.random() * 5) + 1;
       const startDate = new Date(faker.date.future());
 
-      const endDate = new Date(startDate);
-      endDate.setDate(endDate.getDate() + 14);
+      // const endDate = new Date(startDate);
+      // endDate.setDate(endDate.getDate() + 14);
 
-      const deliveryDate = new Date(endDate);
-      deliveryDate.setDate(deliveryDate.getDate() + 7);
+      // const deliveryDate = new Date(endDate);
+      // deliveryDate.setDate(deliveryDate.getDate() + 7);
+
+      const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 14);
+
+      const deliveryDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 7);
 
       const randDiscountPrice = Number((arrOfDiscounts[Math.floor(Math.random() * arrOfDiscounts.length)]
          * usualPriceAmt).toFixed(2));
 
       const listing = {
+
+        id: i + 1,
         // title
         title: faker.hacker.noun(),
 
@@ -109,35 +115,66 @@ module.exports = {
       };
       arrOfListings.push(listing);
     }
-
+    const arrOfDates = [];
     const arrOfPurchases = [];
-
-    for (let i = 0; i < 10; i += 1) {
+    for (let i = 0; i < 50; i += 1) {
+      // generate a random date in each iteration
+      arrOfDates.push(randomDate(new Date(2020, 10, 1), new Date(2021, 0, 15)));
       const singleDate = new Date();
       singleDate.setDate(singleDate.getDate() - i);
+
       const purchase = {
         listing_id: Math.floor(Math.random() * 6) + 1,
         qty: Math.floor(Math.random() * 3) + 1,
         purchaser_id: Math.floor(Math.random() * 2) + 1,
         purchase_status: arrOfPurchaseStatuses[Math.floor(Math.random() * arrOfPurchaseStatuses.length)],
         payment_receipt: 'https://www.citibank.com.sg/gcb/otherservices/images/paynow/step-4.jpg',
-        receipt_upload_date: randomDate(new Date(2020, 0, 1), new Date()),
+        receipt_upload_date: arrOfDates[i],
         payment_status: arrOfPaymentStatuses[Math.floor(Math.random() * arrOfPaymentStatuses.length)],
         // dummy values
         amt_refunded: 0,
         refund_tier: '2',
         date_delivered: null,
-        created_at: singleDate,
-        updated_at: singleDate,
+        // both of the below were changed from singleDate to arrOfDates[i], which is synced to the receipt upload date.
+        // logic is tt the entry create date shld be initially same as the payment date
+        created_at: arrOfDates[i],
+        updated_at: arrOfDates[i],
       };
-      for (let j = 0; j < 5; j += 1) {
-        arrOfPurchases.push(purchase);
-      }
+      // for (let j = 0; j < 5; j += 1) {
+      arrOfPurchases.push(purchase);
+      // }
     }
+
+    const arrOfOrderTrackers = [];
+    arrOfPurchases.forEach((purchase, index) => {
+      // selected listing is an array containing a single el, which is the data of a single listing
+      const selectedListingArr = arrOfListings.filter((listing) => listing.id === purchase.listing_id);
+      const [selectedListing] = selectedListingArr;
+
+      const { start_date } = selectedListing;
+
+      const moqDate = new Date(start_date.getFullYear(), start_date.getMonth(), start_date.getDate() + 6);
+
+      const receiptApprovedDate = new Date(arrOfDates[index].getFullYear(), arrOfDates[index].getMonth(), arrOfDates[index].getDate() + 2);
+
+      arrOfOrderTrackers.push(
+        {
+          purchase_id: index + 1,
+          purchase_date: arrOfDates[index],
+          date_receipt_approved: receiptApprovedDate,
+          date_moq_reached: moqDate,
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+      );
+    });
+
+    arrOfListings.forEach((listing) => { delete listing.id; });
 
     await queryInterface.bulkInsert('users', usersList);
     await queryInterface.bulkInsert('listings', arrOfListings);
     await queryInterface.bulkInsert('purchases', arrOfPurchases);
+    await queryInterface.bulkInsert('order_trackers', arrOfOrderTrackers);
   },
 
   down: async (queryInterface, Sequelize) => {
