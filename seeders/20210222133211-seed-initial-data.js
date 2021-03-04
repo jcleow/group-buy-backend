@@ -41,11 +41,15 @@ module.exports = {
       const usualPriceAmt = Math.floor(Math.random() * 5) + 1;
       const startDate = new Date(faker.date.future());
 
-      const endDate = new Date(startDate);
-      endDate.setDate(endDate.getDate() + 14);
+      // const endDate = new Date(startDate);
+      // endDate.setDate(endDate.getDate() + 14);
 
-      const deliveryDate = new Date(endDate);
-      deliveryDate.setDate(deliveryDate.getDate() + 7);
+      // const deliveryDate = new Date(endDate);
+      // deliveryDate.setDate(deliveryDate.getDate() + 7);
+
+      const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 14);
+
+      const deliveryDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 7);
 
       const randDiscountPrice = Number((arrOfDiscounts[Math.floor(Math.random() * arrOfDiscounts.length)]
          * usualPriceAmt).toFixed(2));
@@ -149,7 +153,7 @@ module.exports = {
 
       const { start_date } = selectedListing;
 
-      const moqDate = new Date(start_date.setDate(selectedListing.start_date.getDate() + 6));
+      const moqDate = new Date(start_date.getFullYear(), start_date.getMonth(), start_date.getDate() + 6);
 
       const receiptApprovedDate = new Date(arrOfDates[index].getFullYear(), arrOfDates[index].getMonth(), arrOfDates[index].getDate() + 2);
 
