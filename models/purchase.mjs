@@ -27,6 +27,10 @@ export default function initPurchaseModel(sequelize, DataTypes) {
     purchaseStatus: {
       type: DataTypes.ENUM('committed', 'activated', 'pending fulfillment', 'fulfilled', 'cancelled'),
     },
+    purchaseDate: {
+      type: DataTypes.DATE,
+      defaultValue: null,
+    },
     paymentReceipt: {
       type: DataTypes.STRING,
     },
@@ -35,6 +39,10 @@ export default function initPurchaseModel(sequelize, DataTypes) {
     },
     paymentStatus: {
       type: DataTypes.ENUM('processing', 'paid', 'refunded'),
+    },
+    dateReceiptApproved: {
+      type: DataTypes.DATE,
+      defaultValue: null,
     },
     amtRefunded: {
       type: DataTypes.DECIMAL,

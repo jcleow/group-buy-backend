@@ -62,6 +62,10 @@ module.exports = {
       moq: {
         type: Sequelize.INTEGER,
       },
+      date_moq_reached: {
+        type: Sequelize.DATE,
+        defaultValue: null,
+      },
       allow_oversubscription: {
         type: Sequelize.BOOLEAN,
       },
@@ -142,6 +146,11 @@ module.exports = {
       purchase_status: {
         type: Sequelize.ENUM('committed', 'activated', 'pending fulfillment', 'fulfilled', 'cancelled'),
       },
+      purchase_date: {
+        type: Sequelize.DATE,
+        defaultValue: null,
+      },
+
       payment_receipt: {
         type: Sequelize.STRING,
       },
@@ -150,6 +159,10 @@ module.exports = {
       },
       payment_status: {
         type: Sequelize.ENUM('processing', 'paid', 'refunded'),
+      },
+      date_receipt_approved: {
+        type: Sequelize.DATE,
+        defaultValue: null,
       },
       amt_refunded: {
         type: Sequelize.DECIMAL,
@@ -169,49 +182,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
-    });
 
-    await queryInterface.createTable('order_trackers', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      // FK
-      purchase_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'purchases',
-          key: 'id',
-        },
-      },
-      purchase_date: {
-        type: Sequelize.DATE,
-        defaultValue: null,
-      },
-      date_receipt_approved: {
-        type: Sequelize.DATE,
-        defaultValue: null,
-      },
-      date_moq_reached: {
-        type: Sequelize.DATE,
-        defaultValue: null,
-      },
-      created_at: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updated_at: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('order_trackers');
     await queryInterface.dropTable('purchases');
     await queryInterface.dropTable('listings');
     await queryInterface.dropTable('users');

@@ -4,7 +4,7 @@ import allConfig from '../config/config.js';
 import initPurchaseModel from './purchase.mjs';
 import initUserModel from './user.mjs';
 import initListingModel from './listing.mjs';
-import initOrderTrackerModel from './order_tracker.mjs';
+// import initOrderTrackerModel from './order_tracker.mjs';
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -38,7 +38,7 @@ if (env === 'production') {
 db.User = initUserModel(sequelize, Sequelize.DataTypes);
 db.Listing = initListingModel(sequelize, Sequelize.DataTypes);
 db.Purchase = initPurchaseModel(sequelize, Sequelize.DataTypes);
-db.OrderTracker = initOrderTrackerModel(sequelize, Sequelize.DataTypes);
+// db.OrderTracker = initOrderTrackerModel(sequelize, Sequelize.DataTypes);
 
 // Define associations
 db.User.hasMany(db.Purchase, { as: 'purchaser', foreignKey: 'purchaser_id' });
@@ -50,8 +50,8 @@ db.Purchase.belongsTo(db.Listing);
 db.User.hasMany(db.Listing, { as: 'lister', foreignKey: 'lister_id' });
 db.Listing.belongsTo(db.User, { as: 'lister' });
 
-db.Purchase.hasOne(db.OrderTracker);
-db.OrderTracker.belongsTo(db.Purchase);
+// db.Purchase.hasOne(db.OrderTracker);
+// db.OrderTracker.belongsTo(db.Purchase);
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

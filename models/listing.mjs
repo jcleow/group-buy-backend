@@ -25,6 +25,10 @@ export default function initListingModel(sequelize, DataTypes) {
     moq: {
       type: DataTypes.INTEGER,
     },
+    dateMoqReached: {
+      type: DataTypes.DATE,
+      defaultValue: null,
+    },
     allowOversubscription: {
       type: DataTypes.BOOLEAN,
     },

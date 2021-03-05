@@ -40,6 +40,7 @@ module.exports = {
       // $1 to $5
       const usualPriceAmt = Math.floor(Math.random() * 5) + 1;
       const startDate = new Date(faker.date.future());
+      const moqDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 4);
 
       const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 14);
 
@@ -73,6 +74,7 @@ module.exports = {
         // moq (random num) // 1 to 5
         moq: Math.floor(Math.random() * 5) + 1,
 
+        date_moq_reached: moqDate,
         // Whether a lister's listing can go beyond its goal set
         allow_oversubscription: false,
 
@@ -128,9 +130,11 @@ module.exports = {
         qty: Math.floor(Math.random() * 3) + 1,
         purchaser_id: Math.floor(Math.random() * 2) + 1,
         purchase_status: arrOfPurchaseStatuses[Math.floor(Math.random() * arrOfPurchaseStatuses.length)],
+        purchase_date: arrOfDates[i],
         payment_receipt: 'https://www.citibank.com.sg/gcb/otherservices/images/paynow/step-4.jpg',
         receipt_upload_date: arrOfDates[i],
         payment_status: arrOfPaymentStatuses[Math.floor(Math.random() * arrOfPaymentStatuses.length)],
+        date_receipt_approved: new Date(arrOfDates[i].getFullYear(), arrOfDates[i].getMonth(), arrOfDates[i].getDate() + 2),
         // dummy values
         amt_refunded: 0,
         refund_tier: '2',
@@ -140,41 +144,40 @@ module.exports = {
         created_at: arrOfDates[i],
         updated_at: arrOfDates[i],
       };
-      // for (let j = 0; j < 5; j += 1) {
+
       arrOfPurchases.push(purchase);
-      // }
     }
 
-    const arrOfOrderTrackers = [];
-    arrOfPurchases.forEach((purchase, index) => {
-      // selected listing is an array containing a single el, which is the data of a single listing
-      const selectedListingArr = arrOfListings.filter((listing) => listing.id === purchase.listing_id);
-      const [selectedListing] = selectedListingArr;
+    // const arrOfOrderTrackers = [];
+    // arrOfPurchases.forEach((purchase, index) => {
+    //   // selected listing is an array containing a single el, which is the data of a single listing
+    //   const selectedListingArr = arrOfListings.filter((listing) => listing.id === purchase.listing_id);
+    //   const [selectedListing] = selectedListingArr;
 
-      const { start_date } = selectedListing;
+    //   const { start_date } = selectedListing;
 
-      const moqDate = new Date(start_date.getFullYear(), start_date.getMonth(), start_date.getDate() + 6);
+    //   const moqDate = new Date(start_date.getFullYear(), start_date.getMonth(), start_date.getDate() + 6);
 
-      const receiptApprovedDate = new Date(arrOfDates[index].getFullYear(), arrOfDates[index].getMonth(), arrOfDates[index].getDate() + 2);
+    //   const receiptApprovedDate = new Date(arrOfDates[index].getFullYear(), arrOfDates[index].getMonth(), arrOfDates[index].getDate() + 2);
 
-      arrOfOrderTrackers.push(
-        {
-          purchase_id: index + 1,
-          purchase_date: arrOfDates[index],
-          date_receipt_approved: receiptApprovedDate,
-          date_moq_reached: moqDate,
-          created_at: new Date(),
-          updated_at: new Date(),
-        },
-      );
-    });
+    //   arrOfOrderTrackers.push(
+    //     {
+    //       purchase_id: index + 1,
+    //       purchase_date: arrOfDates[index],
+    //       date_receipt_approved: receiptApprovedDate,
+    //       date_moq_reached: moqDate,
+    //       created_at: new Date(),
+    //       updated_at: new Date(),
+    //     },
+    //   );
+    // });
 
     arrOfListings.forEach((listing) => { delete listing.id; });
 
     await queryInterface.bulkInsert('users', usersList);
     await queryInterface.bulkInsert('listings', arrOfListings);
     await queryInterface.bulkInsert('purchases', arrOfPurchases);
-    await queryInterface.bulkInsert('order_trackers', arrOfOrderTrackers);
+    // await queryInterface.bulkInsert('order_trackers', arrOfOrderTrackers);
   },
 
   down: async (queryInterface, Sequelize) => {
