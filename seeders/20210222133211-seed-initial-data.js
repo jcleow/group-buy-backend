@@ -32,18 +32,24 @@ module.exports = {
     const arrOfPurchaseStatuses = ['committed', 'activated', 'pending fulfillment', 'fulfilled', 'cancelled'];
     const arrOfPaymentStatuses = ['processing', 'paid', 'refunded'];
 
+    // Generate a random date between 2 bounds
     function randomDate(start, end) {
       return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
     }
 
+    // Set upper and lower bound dates for listings
+
+    const today = new Date();
+    const lowerBoundListingDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+    const upperBoundListingDate = new Date();
+
     for (let i = 0; i < 6; i += 1) {
       // $1 to $5
       const usualPriceAmt = Math.floor(Math.random() * 5) + 1;
-      const startDate = new Date(faker.date.future());
+      const startDate = randomDate(lowerBoundListingDate, upperBoundListingDate);
+
       const moqDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 4);
-
       const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 14);
-
       const deliveryDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 7);
 
       const randDiscountPrice = Number((arrOfDiscounts[Math.floor(Math.random() * arrOfDiscounts.length)]
@@ -84,8 +90,7 @@ module.exports = {
         // discount_price
         discounted_price: randDiscountPrice,
 
-        // start faker.date.future
-        start_date: startDate,
+        start_date: new Date(startDate),
 
         // end date = startDate.date() + 14days
         end_date: endDate,
@@ -95,6 +100,7 @@ module.exports = {
 
         // modulo index if even -> pickup odd -> electronic
         delivery_mode: (i % 2 === 0 ? 'pickup' : 'electronic'),
+
         // tnc: 'Some text'
         tnc: faker.lorem.paragraph(),
 
@@ -111,66 +117,38 @@ module.exports = {
       };
       arrOfListings.push(listing);
     }
-    const arrOfDates = [];
+
     const arrOfPurchases = [];
     for (let i = 0; i < 50; i += 1) {
-      // generate a random date in each iteration
-      const lowerDateBound = new Date();
-      const upperDateBound = new Date();
+      const selectedListingId = Math.floor(Math.random() * 6) + 1;
+      const listingStartDate = new Date(arrOfListings[selectedListingId - 1].start_date);
+      console.log(listingStartDate, 'listingStartDate');
 
-      lowerDateBound.setDate(lowerDateBound.getDate() - 7);
-      upperDateBound.setDate(upperDateBound.getDate() + 7);
-      arrOfDates.push(randomDate(lowerDateBound, upperDateBound));
-
-      const singleDate = new Date();
-      singleDate.setDate(singleDate.getDate() - i);
-
+      const randomPurchaseDate = new Date(
+        listingStartDate.getFullYear(), listingStartDate.getMonth(), listingStartDate.getDate() + Math.floor(Math.random() * 5),
+      );
       const purchase = {
-        listing_id: Math.floor(Math.random() * 6) + 1,
+        listing_id: selectedListingId,
         qty: Math.floor(Math.random() * 3) + 1,
         purchaser_id: Math.floor(Math.random() * 2) + 1,
         purchase_status: arrOfPurchaseStatuses[Math.floor(Math.random() * arrOfPurchaseStatuses.length)],
-        purchase_date: arrOfDates[i],
+        purchase_date: randomPurchaseDate,
         payment_receipt: 'https://www.citibank.com.sg/gcb/otherservices/images/paynow/step-4.jpg',
-        receipt_upload_date: arrOfDates[i],
+        receipt_upload_date: randomPurchaseDate,
         payment_status: arrOfPaymentStatuses[Math.floor(Math.random() * arrOfPaymentStatuses.length)],
-        date_receipt_approved: new Date(arrOfDates[i].getFullYear(), arrOfDates[i].getMonth(), arrOfDates[i].getDate() + 2),
+        date_receipt_approved: new Date(randomPurchaseDate.getFullYear(), randomPurchaseDate.getMonth(), randomPurchaseDate.getDate() + 2),
         // dummy values
         amt_refunded: 0,
         refund_tier: '2',
         date_delivered: null,
-        // both of the below were changed from singleDate to arrOfDates[i], which is synced to the receipt upload date.
+        // both of the below were changed from singleDate to randomPurchaseDate, which is synced to the receipt upload date.
         // logic is tt the entry create date shld be initially same as the payment date
-        created_at: arrOfDates[i],
-        updated_at: arrOfDates[i],
+        created_at: randomPurchaseDate,
+        updated_at: randomPurchaseDate,
       };
 
       arrOfPurchases.push(purchase);
     }
-
-    // const arrOfOrderTrackers = [];
-    // arrOfPurchases.forEach((purchase, index) => {
-    //   // selected listing is an array containing a single el, which is the data of a single listing
-    //   const selectedListingArr = arrOfListings.filter((listing) => listing.id === purchase.listing_id);
-    //   const [selectedListing] = selectedListingArr;
-
-    //   const { start_date } = selectedListing;
-
-    //   const moqDate = new Date(start_date.getFullYear(), start_date.getMonth(), start_date.getDate() + 6);
-
-    //   const receiptApprovedDate = new Date(arrOfDates[index].getFullYear(), arrOfDates[index].getMonth(), arrOfDates[index].getDate() + 2);
-
-    //   arrOfOrderTrackers.push(
-    //     {
-    //       purchase_id: index + 1,
-    //       purchase_date: arrOfDates[index],
-    //       date_receipt_approved: receiptApprovedDate,
-    //       date_moq_reached: moqDate,
-    //       created_at: new Date(),
-    //       updated_at: new Date(),
-    //     },
-    //   );
-    // });
 
     arrOfListings.forEach((listing) => { delete listing.id; });
 
