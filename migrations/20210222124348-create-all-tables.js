@@ -184,37 +184,9 @@ module.exports = {
       },
 
     });
-
-    await queryInterface.createTable('order_trackers', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER,
-      },
-      // FK
-      purchase_id: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'purchases',
-          key: 'id',
-        },
-      },
-
-      created_at: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updated_at: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-    });
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('order_trackers');
     await queryInterface.dropTable('purchases');
     await queryInterface.dropTable('listings');
     await queryInterface.dropTable('users');
