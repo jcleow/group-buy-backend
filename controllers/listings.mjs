@@ -197,6 +197,7 @@ export default function initListingsController(db) {
           startDate: convertToDdMmYy(listing.dataValues.startDate),
           endDate: convertToDdMmYy(listing.dataValues.endDate),
         }));
+        console.log(formattedMyListings, 'formattedMyListingsmyListings');
         res.send({ message: 'success', formattedMyListings });
       // Else say you are not authenticated
       } else {
@@ -204,6 +205,7 @@ export default function initListingsController(db) {
       }
     } catch (err) {
       console.log(err);
+      console.log('error here');
     }
   };
 
