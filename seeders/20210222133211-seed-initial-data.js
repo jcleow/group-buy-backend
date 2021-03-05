@@ -40,7 +40,7 @@ module.exports = {
       // $1 to $5
       const usualPriceAmt = Math.floor(Math.random() * 5) + 1;
       const startDate = new Date(faker.date.future());
-      console.log(startDate+4)
+      const moqDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 4);
 
       // const endDate = new Date(startDate);
       // endDate.setDate(endDate.getDate() + 14);
@@ -79,8 +79,8 @@ module.exports = {
 
         // moq (random num) // 1 to 5
         moq: Math.floor(Math.random() * 5) + 1,
-        
-        date_moq_reached:, 
+
+        date_moq_reached: moqDate,
         // Whether a lister's listing can go beyond its goal set
         allow_oversubscription: false,
 
@@ -144,7 +144,7 @@ module.exports = {
         created_at: arrOfDates[i],
         updated_at: arrOfDates[i],
       };
-  
+
       arrOfPurchases.push(purchase);
     }
 
@@ -177,7 +177,7 @@ module.exports = {
     await queryInterface.bulkInsert('users', usersList);
     await queryInterface.bulkInsert('listings', arrOfListings);
     await queryInterface.bulkInsert('purchases', arrOfPurchases);
-    await queryInterface.bulkInsert('order_trackers', arrOfOrderTrackers);
+    // await queryInterface.bulkInsert('order_trackers', arrOfOrderTrackers);
   },
 
   down: async (queryInterface, Sequelize) => {
