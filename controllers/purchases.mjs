@@ -47,7 +47,6 @@ export default function initPurchasesController(db) {
       },
       include: [{ model: db.Listing }, { model: db.OrderTracker }],
     });
-    console.log(purchasesAssociatedWithUser);
     res.send(purchasesAssociatedWithUser);
 
     // docs for mixins: https://sequelize.org/master/manual/assocs.html#one-to-many-relationships

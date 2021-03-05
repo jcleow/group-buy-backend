@@ -1,4 +1,4 @@
-import { generatePastSevenDays, convertToDdMm } from '../helper.mjs';
+import { generatePastSevenDays, convertToDdMm, convertToDdMmYy } from '../helper.mjs';
 
 export default function initListingsController(db) {
   /**
@@ -148,7 +148,6 @@ export default function initListingsController(db) {
       ).forEach((key) => {
         purchaseData[key] = purchase[key];
       });
-      console.log(purchase.dataValues, 'purchase-dataValues');
 
       // Manually include purchaser's name and reputation as they are nested
       purchaseData.username = purchase.purchaser.username;
@@ -157,7 +156,6 @@ export default function initListingsController(db) {
       // **** Fictious quantity in purchases!! to be removed ***///
       purchaseData.quantity = Math.floor(Math.random() * 100);
       // *******************************************************//
-      console.log(purchaseData, 'purchaseData');
       return purchaseData;
     });
 
@@ -183,6 +181,34 @@ export default function initListingsController(db) {
     res.send({ allFilteredPurchaseData, pastSevenDaysCount });
   };
 
+  // Retrieve user's listings
+
+  const myListings = async (req, res) => {
+    try {
+    // If authenticated
+      if (req.loggedInUserId) {
+        const myListingsArr = await db.Listing.findAll({
+          where: {
+            lister_id: req.loggedInUserId,
+          },
+        });
+        const formattedMyListings = myListingsArr.map((listing) => ({
+          ...listing.dataValues,
+          startDate: convertToDdMmYy(listing.dataValues.startDate),
+          endDate: convertToDdMmYy(listing.dataValues.endDate),
+        }));
+        console.log(formattedMyListings, 'formattedMyListingsmyListings');
+        res.send({ message: 'success', formattedMyListings });
+      // Else say you are not authenticated
+      } else {
+        res.send({ message: 'failure' });
+      }
+    } catch (err) {
+      console.log(err);
+      console.log('error here');
+    }
+  };
+
   return {
     index,
     getListing,
@@ -191,5 +217,6 @@ export default function initListingsController(db) {
     updateListing,
     updateListingImages,
     getAllPurchases,
+    myListings,
   };
 }
