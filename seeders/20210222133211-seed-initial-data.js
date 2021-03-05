@@ -42,12 +42,6 @@ module.exports = {
       const startDate = new Date(faker.date.future());
       const moqDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 4);
 
-      // const endDate = new Date(startDate);
-      // endDate.setDate(endDate.getDate() + 14);
-
-      // const deliveryDate = new Date(endDate);
-      // deliveryDate.setDate(deliveryDate.getDate() + 7);
-
       const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 14);
 
       const deliveryDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() + 7);
@@ -121,7 +115,13 @@ module.exports = {
     const arrOfPurchases = [];
     for (let i = 0; i < 50; i += 1) {
       // generate a random date in each iteration
-      arrOfDates.push(randomDate(new Date(2020, 10, 1), new Date(2021, 0, 15)));
+      const lowerDateBound = new Date();
+      const upperDateBound = new Date();
+
+      lowerDateBound.setDate(lowerDateBound.getDate() - 7);
+      upperDateBound.setDate(upperDateBound.getDate() + 7);
+      arrOfDates.push(randomDate(lowerDateBound, upperDateBound));
+
       const singleDate = new Date();
       singleDate.setDate(singleDate.getDate() - i);
 
