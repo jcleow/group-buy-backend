@@ -27,9 +27,9 @@ export default function initUsersController(db) {
         res.send({ auth: false });
         return;
       }
-
-      res.cookie('loggedInUsername', selectedUser.username, { sameSite: false });
-      res.cookie('loggedInUserId', selectedUser.id, { sameSite: false });
+      // { domain: 'group-buy-app-7087.herokuapp.com', secure: true, sameSite: 'None' }
+      res.cookie('loggedInUsername', selectedUser.username);
+      res.cookie('loggedInUserId', selectedUser.id);
       res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id));
       res.send({ auth: true, user: selectedUser });
     } catch (err) {

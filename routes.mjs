@@ -54,9 +54,9 @@ export default function bindRoutes(app) {
         req.loggedInUsername = chosenUser.username;
         // If hash is not valid, delete all cookies
       } else {
-        res.clearCookie('loggedInHash');
-        res.clearCookie('loggedInUserId');
-        res.clearCookie('loggedInUsername');
+        res.clearCookie('loggedInHash', { secure: true, sameSite: 'None' });
+        res.clearCookie('loggedInUserId', { secure: true, sameSite: 'None' });
+        res.clearCookie('loggedInUsername', { secure: true, sameSite: 'None' });
       }
       next();
       return;
