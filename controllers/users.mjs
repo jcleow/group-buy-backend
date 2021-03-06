@@ -27,10 +27,10 @@ export default function initUsersController(db) {
         res.send({ auth: false });
         return;
       }
-
-      res.cookie('loggedInUsername', selectedUser.username, { domain: 'group-buy-app-7087.herokuapp.com', secure: true, sameSite: 'None' });
-      res.cookie('loggedInUserId', selectedUser.id, { domain: 'group-buy-app-7087.herokuapp.com', secure: true, sameSite: 'None' });
-      res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id), { domain: 'group-buy-app-7087.herokuapp.com', secure: true, sameSite: 'None' });
+      // { domain: 'group-buy-app-7087.herokuapp.com', secure: true, sameSite: 'None' }
+      res.cookie('loggedInUsername', selectedUser.username);
+      res.cookie('loggedInUserId', selectedUser.id);
+      res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id));
       res.send({ auth: true, user: selectedUser });
     } catch (err) {
       console.log(err);
