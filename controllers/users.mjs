@@ -28,9 +28,9 @@ export default function initUsersController(db) {
         return;
       }
 
-      res.cookie('loggedInUsername', selectedUser.username, { secure: true, sameSite: 'None' });
-      res.cookie('loggedInUserId', selectedUser.id, { secure: true, sameSite: 'None' });
-      res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id), { secure: true, sameSite: 'None' });
+      res.cookie('loggedInUsername', selectedUser.username, { domain: 'group-buy-app-7087.herokuapp.com', secure: true, sameSite: 'None' });
+      res.cookie('loggedInUserId', selectedUser.id, { domain: 'group-buy-app-7087.herokuapp.com', secure: true, sameSite: 'None' });
+      res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id), { domain: 'group-buy-app-7087.herokuapp.com', secure: true, sameSite: 'None' });
       res.send({ auth: true, user: selectedUser });
     } catch (err) {
       console.log(err);
