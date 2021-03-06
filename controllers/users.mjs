@@ -28,9 +28,9 @@ export default function initUsersController(db) {
         return;
       }
 
-      res.cookie('loggedInUsername', selectedUser.username, { sameSite: 'None' });
-      res.cookie('loggedInUserId', selectedUser.id, { sameSite: 'None' });
-      res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id), { sameSite: 'None' });
+      res.cookie('loggedInUsername', selectedUser.username, { secure: true, sameSite: 'None' });
+      res.cookie('loggedInUserId', selectedUser.id, { secure: true, sameSite: 'None' });
+      res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id), { secure: true, sameSite: 'None' });
       res.send({ auth: true, user: selectedUser });
     } catch (err) {
       console.log(err);
