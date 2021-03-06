@@ -6,7 +6,13 @@ export default function initListingsController(db) {
    * It also returns the list of unique categories
    */
   const index = async (request, response) => {
-    db.Listing.findAll()
+    db.Listing.findAll({
+      include: {
+        model: db.User,
+        as: 'lister',
+        attributes: ['username'],
+      },
+    })
       .then((listings) => {
         // Find the list of unique categories
         const categories = db.Listing.rawAttributes.category.values;
@@ -21,7 +27,15 @@ export default function initListingsController(db) {
 
   const getListing = async (request, response) => {
     const { listingId } = request.params;
-    const selectedListing = await db.Listing.findByPk(Number(listingId));
+    const selectedListing = await db.Listing.findOne({
+      where: { id: Number(listingId) },
+      include: {
+        model: db.User,
+        as: 'lister',
+        attributes: ['username'],
+      },
+    });
+
     if (selectedListing === null || undefined === selectedListing) {
       response.status(400).send({ message: 'Not a valid listing', selectedListing });
     }
