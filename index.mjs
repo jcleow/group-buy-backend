@@ -12,6 +12,9 @@ app.set('view engine', 'ejs');
 app.use(cors({
   credentials: true,
   origin: true,
+  cookie: {
+    sameSite: 'none',
+  },
 }));
 // Bind cookie parser middleware to parse cookies in requests
 app.use(cookieParser());

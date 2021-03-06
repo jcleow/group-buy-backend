@@ -119,6 +119,7 @@ export default function initListingsController(db) {
     }
     // Add the new image files to the existing ones
     // Create a hashmap of all the image urls
+    console.log(request.files, 'request.files');
     request.files.forEach((file, idx) => {
       newListing.images[`img${imageStartIndex + idx}`] = file.location;
     });
