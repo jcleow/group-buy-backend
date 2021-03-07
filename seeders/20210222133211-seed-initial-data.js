@@ -28,6 +28,7 @@ module.exports = {
     const arrOfListings = [];
 
     const arrOfDiscounts = [0.2, 0.3, 0.4];
+    const arrOfCategories = ['Food', 'Clothes', 'Toys', 'Health', 'Sports', 'Pets'];
     const arrOfListingStatuses = ['below-moq', 'above-moq', 'cancelled', 'completed'];
     const arrOfPurchaseStatuses = ['committed', 'activated', 'pending fulfillment', 'fulfilled', 'cancelled'];
     const arrOfPaymentStatuses = ['processing', 'paid', 'refunded'];
@@ -105,7 +106,8 @@ module.exports = {
         tnc: faker.lorem.paragraph(),
 
         // category modulo index if even -> food odd -> clothes
-        category: (i % 2 === 0 ? 'food' : 'clothes'),
+        // category: (i % 2 === 0 ? 'food' : 'clothes'),
+        category: arrOfCategories[Math.floor(Math.random() * arrOfCategories.length)],
 
         // random Number for lister_id
         lister_id: Math.floor(Math.random() * 2) + 1,
