@@ -91,7 +91,7 @@ module.exports = {
         type: Sequelize.TEXT,
       },
       category: {
-        type: Sequelize.ENUM('food', 'clothes'),
+        type: Sequelize.ENUM('Food', 'Clothes', 'Toys', 'Health', 'Sports', 'Pets'),
       },
       lister_id: {
         type: Sequelize.INTEGER,

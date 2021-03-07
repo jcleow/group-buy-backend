@@ -54,7 +54,7 @@ export default function initListingModel(sequelize, DataTypes) {
       type: DataTypes.TEXT,
     },
     category: {
-      type: DataTypes.ENUM('food', 'clothes'),
+      type: DataTypes.ENUM('Food', 'Clothes', 'Toys', 'Health', 'Sports', 'Pets'),
     },
     listerId: {
       type: DataTypes.INTEGER,
