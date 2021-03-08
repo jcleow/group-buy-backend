@@ -164,8 +164,6 @@ export default function initListingsController(db) {
         purchaseData[key] = purchase[key];
       });
 
-      console.log(purchase.dataValues, 'purchase-dataValues');
-
       // Manually include purchaser's name and reputation as they are nested
       purchaseData.username = purchase.purchaser.username;
       purchaseData.reputation = purchase.purchaser.reputation;
@@ -213,7 +211,6 @@ export default function initListingsController(db) {
           startDate: convertToDdMmYy(listing.dataValues.startDate),
           endDate: convertToDdMmYy(listing.dataValues.endDate),
         }));
-        console.log(formattedMyListings, 'formattedMyListingsmyListings');
         res.send({ message: 'success', formattedMyListings });
       // Else say you are not authenticated
       } else {
