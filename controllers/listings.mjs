@@ -168,9 +168,8 @@ export default function initListingsController(db) {
       purchaseData.username = purchase.purchaser.username;
       purchaseData.reputation = purchase.purchaser.reputation;
 
-      // **** Fictious quantity in purchases!! to be removed ***///
-      purchaseData.quantity = Math.floor(Math.random() * 100);
-      // *******************************************************//
+      // Specify as 'quantity' instead of qty in db
+      purchaseData.quantity = purchase.qty;
       return purchaseData;
     });
 
@@ -212,7 +211,6 @@ export default function initListingsController(db) {
           startDate: convertToDdMmYy(listing.dataValues.startDate),
           endDate: convertToDdMmYy(listing.dataValues.endDate),
         }));
-        console.log(formattedMyListings, 'formattedMyListingsmyListings');
         res.send({ message: 'success', formattedMyListings });
       // Else say you are not authenticated
       } else {

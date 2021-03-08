@@ -42,14 +42,13 @@ export default function bindRoutes(app) {
       const hash = convertUserIdToHash(req.cookies.loggedInUserId);
 
       if (req.cookies.loggedInHash === hash) {
-        req.middlewareLoggedIn = true;
-
         const { loggedInUserId } = req.cookies;
         // Double check by finding this user in the database
         const chosenUser = await db.User.findByPk(loggedInUserId);
         if (!chosenUser) {
           res.status(503).send('Sorry an error has occurred');
         }
+        req.middlewareLoggedIn = true;
         req.loggedInUserId = Number(req.cookies.loggedInUserId);
         req.loggedInUsername = chosenUser.username;
         // If hash is not valid, delete all cookies
@@ -64,6 +63,14 @@ export default function bindRoutes(app) {
     next();
   });
 
+  // Check if user is logged in, else proceed
+  const checkLoggedIn = async (req, res, next) => {
+    if (req.middlewareLoggedIn === false) {
+      res.status(503).send('You are not logged in');
+      return;
+    }
+    next();
+  };
   // initialize the controller functions here
   // pass in the db for all callbacks
   const UsersController = initUsersController(db);
@@ -75,20 +82,21 @@ export default function bindRoutes(app) {
   app.post('/recordPurchase/:listingPK/:qtyOrdered', multerUpload.single('receiptImg'), PurchasesController.recordPurchase);
   app.get('/purchases/count/:listingId', PurchasesController.countPurchasesPerListing);
   // get all purchases to display in MyProfile
-  app.post('/allPurchases', PurchasesController.allPurchases);
+  // app.post('/allPurchases', PurchasesController.allPurchases);
+  app.post('/allPurchases', checkLoggedIn, PurchasesController.allPurchases);
   app.put('/listing/:currListingId/purchase/:purchaseId/date', PurchasesController.updateDateDelivered);
 
   const ListingsController = initListingsController(db);
   app.get('/listings', ListingsController.index);
   app.get('/listing/:listingId', ListingsController.getListing);
   // To get all purchases associated with a listing
-  app.get('/listing/:listingId/allPurchases', ListingsController.getAllPurchases);
-  app.post('/createListing', ListingsController.create);
+  app.get('/listing/:listingId/allPurchases', checkLoggedIn, ListingsController.getAllPurchases);
+  app.post('/createListing', checkLoggedIn, ListingsController.create);
   // Used multerUpload.array and req files was empty hence use .any() instead.
   // https://stackoverflow.com/questions/46987140/express-multer-upload-doesnt-work
   // Accepts all files that comes over the wire. An array of files will be stored in req.files.
   app.post('/listings/:listingId/uploadCampaignPictures', multerUpload.any('campaignImages'), ListingsController.uploadCampaignPictures);
-  app.get('/myListings', ListingsController.myListings);
+  app.get('/myListings', checkLoggedIn, ListingsController.myListings);
 
   // To update an already existing data
   app.post('/listings/:listingId/update', ListingsController.updateListing);
