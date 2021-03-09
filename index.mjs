@@ -9,6 +9,7 @@ const app = express();
 // Set the Express view engine to expect EJS templates
 app.set('view engine', 'ejs');
 
+//* **Insert comments to display udnerstanding of the credentials and origins****
 app.use(cors({
   credentials: true,
   origin: true,

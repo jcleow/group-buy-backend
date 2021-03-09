@@ -40,9 +40,9 @@ export default function initUsersController(db) {
   };
 
   const signOut = async (req, res) => {
-    res.clearCookie('loggedInHash');
-    res.clearCookie('loggedInUserId');
-    res.clearCookie('loggedInUsername');
+    res.clearCookie('loggedInHash', domainOption);
+    res.clearCookie('loggedInUserId', domainOption);
+    res.clearCookie('loggedInUsername', domainOption);
     res.send({ message: 'signed out' });
   };
 
