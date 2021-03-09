@@ -1,6 +1,8 @@
 import jsSHA from 'jssha';
 import convertUserIdToHash, { hashPassword } from '../helper.mjs';
 
+const domainOption = { domain: 'groupbuy.site' };
+
 export default function initUsersController(db) {
   const checkLoggedIn = (req, res) => {
     const { loggedInUserId, loggedInUsername } = req.cookies;
@@ -28,9 +30,9 @@ export default function initUsersController(db) {
         return;
       }
       // { domain: 'group-buy-app-7087.herokuapp.com', secure: true, sameSite: 'None' }
-      res.cookie('loggedInUsername', selectedUser.username);
-      res.cookie('loggedInUserId', selectedUser.id);
-      res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id));
+      res.cookie('loggedInUsername', selectedUser.username, domainOption);
+      res.cookie('loggedInUserId', selectedUser.id, domainOption);
+      res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id), domainOption);
       res.send({ auth: true, user: selectedUser });
     } catch (err) {
       console.log(err);
@@ -63,9 +65,9 @@ export default function initUsersController(db) {
     });
 
     // Send cookies
-    res.cookie('loggedInUsername', newUser.username);
-    res.cookie('loggedInUserId', newUser.id);
-    res.cookie('loggedInHash', convertUserIdToHash(newUser.id));
+    res.cookie('loggedInUsername', newUser.username, domainOption);
+    res.cookie('loggedInUserId', newUser.id, domainOption);
+    res.cookie('loggedInHash', convertUserIdToHash(newUser.id), domainOption);
     res.send({ auth: true, user: newUser });
   };
 
