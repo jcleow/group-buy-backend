@@ -12,6 +12,9 @@ export default function initListingsController(db) {
         as: 'lister',
         attributes: ['username'],
       },
+      where: {
+        isDeleted: false,
+      },
     })
       .then((listings) => {
         // Find the list of unique categories
@@ -28,7 +31,7 @@ export default function initListingsController(db) {
   const getListing = async (request, response) => {
     const { listingId } = request.params;
     const selectedListing = await db.Listing.findOne({
-      where: { id: Number(listingId) },
+      where: { id: Number(listingId), isDeleted: false },
       include: {
         model: db.User,
         as: 'lister',
@@ -204,6 +207,7 @@ export default function initListingsController(db) {
         const myListingsArr = await db.Listing.findAll({
           where: {
             lister_id: req.loggedInUserId,
+            isDeleted: false,
           },
         });
         const formattedMyListings = myListingsArr.map((listing) => ({
@@ -222,6 +226,40 @@ export default function initListingsController(db) {
     }
   };
 
+  /**
+   * Function to delete a specific listing
+   */
+  const deleteListing = async (request, response) => {
+    try {
+      // If authenticated
+      if (request.loggedInUserId) {
+        const { listingId } = request.params;
+        // Check whether there are any purchases for the listing.
+        // If there is, set the cancelled status
+        const purchaseCount = await db.Purchase.count({ where: { listing_id: listingId } });
+        const existingListing = await db.Listing.findByPk(Number(listingId));
+        let responseMessage = '';
+        if (purchaseCount > 0) {
+          existingListing.listingStatus = 'cancelled';
+          responseMessage = 'Listing can\'t be deleted as purchases are already made. Instead it\'s cancelled.';
+        }
+        else {
+          existingListing.isDeleted = true;
+          responseMessage = 'Deletion completed.';
+        }
+        await existingListing.save();
+        response.status(200).send({ message: responseMessage });
+      }
+      else {
+        // Else say you are not authenticated
+        response.send({ message: 'Not authoirzed. Failed to delete the specified listing' });
+      }
+    } catch (err) {
+      console.log(err);
+      response.send({ message: 'Failed to delete the specified listing' });
+    }
+  };
+
   return {
     index,
     getListing,
@@ -231,5 +269,6 @@ export default function initListingsController(db) {
     updateListingImages,
     getAllPurchases,
     myListings,
+    deleteListing,
   };
 }

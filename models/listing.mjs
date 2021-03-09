@@ -67,7 +67,7 @@ export default function initListingModel(sequelize, DataTypes) {
       type: DataTypes.ENUM('below-moq', 'above-moq', 'cancelled', 'completed'),
       defaultValue: 'below-moq',
     },
-    is_deleted: {
+    isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
