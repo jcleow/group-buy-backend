@@ -34,6 +34,12 @@ const multerUpload = multer({
 // --------------------------------------------------
 
 export default function bindRoutes(app) {
+  // // Any traffic going into my server can query it
+  // app.use((req, res, next) => {
+  //   res.header('Access-Control-Allow-Origin', '*');
+  //   next();
+  // });
+
   // Middleware that checks if a user is authenticated
   app.use(async (req, res, next) => {
     req.middlewareLoggedIn = false;
