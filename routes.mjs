@@ -35,16 +35,16 @@ const multerUpload = multer({
 
 export default function bindRoutes(app) {
   // // Any traffic going into my server can query it
-  app.use((req, res, next) => {
-    let origin;
-    if (process.env.NODE_ENV === 'production') {
-      origin = 'https://www.groupbuy.site';
-    } else {
-      origin = 'http://localhost:3000';
-    }
-    res.header('Access-Control-Allow-Origin', origin);
-    next();
-  });
+  // app.use((req, res, next) => {
+  //   let origin;
+  //   if (process.env.NODE_ENV === 'production') {
+  //     origin = 'https://www.groupbuy.site';
+  //   } else {
+  //     origin = 'http://localhost:3000';
+  //   }
+  //   res.header('Access-Control-Allow-Origin', origin);
+  //   next();
+  // });
 
   // Middleware that checks if a user is authenticated
   app.use(async (req, res, next) => {
@@ -62,6 +62,7 @@ export default function bindRoutes(app) {
         const chosenUser = await db.User.findByPk(loggedInUserId);
         if (!chosenUser) {
           res.status(503).send('Sorry an error has occurred');
+          return;
         }
         req.middlewareLoggedIn = true;
         req.loggedInUserId = Number(req.cookies.loggedInUserId);
