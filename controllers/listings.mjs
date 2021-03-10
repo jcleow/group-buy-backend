@@ -50,6 +50,7 @@ export default function initListingsController(db) {
       ...updatedFormStore,
       usualPrice: updatedFormStore.usualPrice?.replace(/[$,]/g, ''),
       discountedPrice: updatedFormStore.discountedPrice?.replace(/[$,]/g, ''),
+      quantityRemaining: updatedFormStore.quantity,
     };
 
     // Create a new listing
