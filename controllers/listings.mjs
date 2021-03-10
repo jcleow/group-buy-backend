@@ -113,8 +113,11 @@ export default function initListingsController(db) {
     let imageStartIndex = 0;
     if (newListing.images) {
       const numOfImages = Object.keys(newListing.images).length;
-      // Get the last index after 'img' in key
-      imageStartIndex = Number(Object.keys(newListing.images)[numOfImages - 1].substr(3));
+      if (numOfImages !== 0)
+      {
+        // Get the last index after 'img' in key
+        imageStartIndex = Number(Object.keys(newListing.images)[numOfImages - 1].substr(3));
+      }
       imageStartIndex += 1;
     }
     // Add the new image files to the existing ones
