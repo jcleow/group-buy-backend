@@ -30,9 +30,15 @@ export default function initUsersController(db) {
         return;
       }
       // { domain: 'group-buy-app-7087.herokuapp.com', secure: true, sameSite: 'None' }
-      res.cookie('loggedInUsername', selectedUser.username, domainOption);
-      res.cookie('loggedInUserId', selectedUser.id, domainOption);
-      res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id), domainOption);
+      if (process.env.NODE_ENV === 'production') {
+        res.cookie('loggedInUsername', selectedUser.username, domainOption);
+        res.cookie('loggedInUserId', selectedUser.id, domainOption);
+        res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id), domainOption);
+      } else {
+        res.cookie('loggedInUsername', selectedUser.username);
+        res.cookie('loggedInUserId', selectedUser.id);
+        res.cookie('loggedInHash', convertUserIdToHash(selectedUser.id));
+      }
       res.send({ auth: true, user: selectedUser });
     } catch (err) {
       console.log(err);
@@ -40,9 +46,15 @@ export default function initUsersController(db) {
   };
 
   const signOut = async (req, res) => {
-    res.clearCookie('loggedInHash', domainOption);
-    res.clearCookie('loggedInUserId', domainOption);
-    res.clearCookie('loggedInUsername', domainOption);
+    if (process.env.NODE_ENV === 'production') {
+      res.clearCookie('loggedInHash', domainOption);
+      res.clearCookie('loggedInUserId', domainOption);
+      res.clearCookie('loggedInUsername', domainOption);
+    } else {
+      res.clearCookie('loggedInHash');
+      res.clearCookie('loggedInUserId');
+      res.clearCookie('loggedInUsername');
+    }
     res.send({ message: 'signed out' });
   };
 
@@ -65,9 +77,15 @@ export default function initUsersController(db) {
     });
 
     // Send cookies
-    res.cookie('loggedInUsername', newUser.username, domainOption);
-    res.cookie('loggedInUserId', newUser.id, domainOption);
-    res.cookie('loggedInHash', convertUserIdToHash(newUser.id), domainOption);
+    if (process.env.NODE_ENV === 'production') {
+      res.cookie('loggedInUsername', newUser.username, domainOption);
+      res.cookie('loggedInUserId', newUser.id, domainOption);
+      res.cookie('loggedInHash', convertUserIdToHash(newUser.id), domainOption);
+    } else {
+      res.cookie('loggedInUsername', newUser.username);
+      res.cookie('loggedInUserId', newUser.id);
+      res.cookie('loggedInHash', convertUserIdToHash(newUser.id));
+    }
     res.send({ auth: true, user: newUser });
   };
 
