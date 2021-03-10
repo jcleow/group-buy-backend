@@ -36,7 +36,13 @@ const multerUpload = multer({
 export default function bindRoutes(app) {
   // // Any traffic going into my server can query it
   app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
+    let origin;
+    if (process.env.NODE_ENV === 'production') {
+      origin = 'https://www.groupbuy.site';
+    } else {
+      origin = 'http://localhost:3000';
+    }
+    res.header('Access-Control-Allow-Origin', origin);
     next();
   });
 
