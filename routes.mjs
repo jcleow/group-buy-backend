@@ -50,6 +50,9 @@ export default function bindRoutes(app) {
   app.use(async (req, res, next) => {
     req.middlewareLoggedIn = false;
 
+    console.log('req-cookies');
+    console.log(req.cookies);
+
     if (req.cookies.loggedInUserId) {
       const hash = convertUserIdToHash(req.cookies.loggedInUserId);
 
