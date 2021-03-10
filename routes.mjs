@@ -35,10 +35,10 @@ const multerUpload = multer({
 
 export default function bindRoutes(app) {
   // // Any traffic going into my server can query it
-  // app.use((req, res, next) => {
-  //   res.header('Access-Control-Allow-Origin', '*');
-  //   next();
-  // });
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+  });
 
   // Middleware that checks if a user is authenticated
   app.use(async (req, res, next) => {
@@ -72,6 +72,7 @@ export default function bindRoutes(app) {
   // Check if user is logged in, else proceed
   const checkLoggedIn = async (req, res, next) => {
     if (req.middlewareLoggedIn === false) {
+      console.log('test');
       res.status(503).send('You are not logged in');
       return;
     }
