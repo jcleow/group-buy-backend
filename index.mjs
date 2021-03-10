@@ -10,10 +10,7 @@ const app = express();
 app.set('view engine', 'ejs');
 
 //* **Insert comments to display udnerstanding of the credentials and origins****
-app.use(cors({
-  credentials: true,
-  // origin: true,
-}));
+app.use(cors());
 // Bind cookie parser middleware to parse cookies in requests
 app.use(cookieParser());
 // Bind Express middleware to parse request bodies for POST requests
