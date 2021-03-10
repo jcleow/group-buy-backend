@@ -12,7 +12,7 @@ app.set('view engine', 'ejs');
 //* **Insert comments to display udnerstanding of the credentials and origins****
 app.use(cors({
   credentials: true,
-  origin: true,
+  // origin: true,
 }));
 // Bind cookie parser middleware to parse cookies in requests
 app.use(cookieParser());
