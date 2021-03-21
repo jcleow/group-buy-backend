@@ -21,8 +21,8 @@ Heroku: https://www.groupbuy.site/
 3. Usage of alias in database models to reflect a user being a buyer and a lister(seller)
 
 ## Technologies Used ##
-Frontend: React, CSS  
-Backend: PostgresQL, Sequelize   
+Frontend: React, CSS, Bootstrap
+Backend: PostgresQL, Sequeliz, Express  
 External libraries used: React-Vis (Charting) React-Bootstrap-Table-Next, AWS-S3, Multer 
 
 ## Further Discussions and Reflections ##
