@@ -1,6 +1,6 @@
 # Group Buy (Backend)
 
-\*This is the Backend repo!
+*This is the Backend repo!
 Frontend Repo: https://github.com/jcleow/group-buy-frontend
 
 Web-app that consolidates mass pre-orders amongst buyers and listers(sellers) to unlock volume discounts
