@@ -34,6 +34,7 @@ External libraries used: React-Vis (Charting) React-Bootstrap-Table-Next, AWS-S3
 ## Further Discussions and Reflections
 
 Portfolio Pages:
+
 Jeremy: http://bit.ly/jeremyl91
 
 Veena: https://veena-s.github.io/Portfolio/groupbuy.html
