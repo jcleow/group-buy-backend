@@ -1,6 +1,6 @@
 # Group Buy (Backend)
 
-*This is the Backend repo!
+\*This is the Backend repo!
 Frontend Repo: https://github.com/jcleow/group-buy-frontend
 
 Web-app that consolidates mass pre-orders amongst buyers and listers(sellers) to unlock volume discounts
@@ -34,8 +34,10 @@ External libraries used: React-Vis (Charting) React-Bootstrap-Table-Next, AWS-S3
 ## Further Discussions and Reflections
 
 Portfolio Pages:
-Jeremy: http://bit.ly/jeremyl91  
+Jeremy: http://bit.ly/jeremyl91
+
 Veena: https://veena-s.github.io/Portfolio/groupbuy.html
+
 Jit Corn: https://jcleow.github.io/portfolio/groupBuy.html
 
 ## How to run locally
