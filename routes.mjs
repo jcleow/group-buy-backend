@@ -34,18 +34,6 @@ const multerUpload = multer({
 // --------------------------------------------------
 
 export default function bindRoutes(app) {
-  // // Any traffic going into my server can query it
-  // app.use((req, res, next) => {
-  //   let origin;
-  //   if (process.env.NODE_ENV === 'production') {
-  //     origin = 'https://www.groupbuy.site';
-  //   } else {
-  //     origin = 'http://localhost:3000';
-  //   }
-  //   res.header('Access-Control-Allow-Origin', origin);
-  //   next();
-  // });
-
   // Middleware that checks if a user is authenticated
   app.use(async (req, res, next) => {
     req.middlewareLoggedIn = false;
@@ -99,7 +87,6 @@ export default function bindRoutes(app) {
   app.post('/recordPurchase/:listingPK/:qtyOrdered', multerUpload.single('receiptImg'), PurchasesController.recordPurchase);
   app.get('/purchases/count/:listingId', PurchasesController.countPurchasesPerListing);
   // get all purchases to display in MyProfile
-  // app.post('/allPurchases', PurchasesController.allPurchases);
   app.post('/allPurchases', checkLoggedIn, PurchasesController.allPurchases);
   app.put('/listing/:currListingId/purchase/:purchaseId/date', PurchasesController.updateDateDelivered);
 
